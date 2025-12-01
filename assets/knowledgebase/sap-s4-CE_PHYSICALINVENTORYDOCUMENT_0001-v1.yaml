@@ -1,0 +1,3498 @@
+openapi: 3.0.0
+info:
+  title: Physical Inventory Document
+  version: 1.0.0
+  description: You can count items and post differences on both document and item level. The service can be consumed by external systems.
+externalDocs:
+  description: Business Documentation
+  url: https://help.sap.com/http.svc/ahp2/SAP_S4HANA_CLOUD/2508.latest/EN/0c/125b2072c549ef99fb4b8810efb529/frameset.htm
+x-sap-api-type: ODATAV4
+x-sap-shortText: Use this synchronous inbound service to read and create physical inventory documents
+x-sap-software-min-version: '2508'
+x-sap-ext-overview:
+- name: Communication Scenario
+  values:
+  - text: Physical Inventory Document Integration (SAP_COM_0107)
+    format: plain
+- name: Scope Items
+  values:
+  - text: '[Physical Inventory – Inventory Count and Adjustment (BML)](https://me.sap.com/processnavigator/SolP/BML " Link To BP ")'
+    format: markdown
+  - text: '[Physical Inventory – Inventory Count and Adjustment (OML)](https://me.sap.com/processnavigator/SolP/OML " Link To BP ")'
+    format: markdown
+- name: Authentication Methods
+  values:
+  - text: x509
+    format: plain
+- name: Service Group Name
+  values:
+  - text: API_PHYSICALINVENTORYDOCUMENT
+    format: plain
+- name: Business Object
+  values:
+  - text: Physical Inventory Document
+    format: plain
+servers:
+- url: https://{host}:{port}/sap/opu/odata4/sap/api_physicalinventorydocument/srvd_a2x/sap/physicalinventorydocument/0001
+  variables:
+    host:
+      default: ''
+    port:
+      default: ''
+- url: https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata4/sap/api_physicalinventorydocument/srvd_a2x/sap/physicalinventorydocument/0001
+x-sap-extensible:
+  supported: 'no'
+tags:
+- name: Physical Inventory Book Serial Number
+- name: Physical Inventory Count Serial Number
+- name: Physical Inventory Document Header
+- name: Physical Inventory Document Item
+paths:
+  /BookSerialNumber:
+    get:
+      summary: Get entities from BookSerialNumber
+      tags:
+      - Physical Inventory Book Serial Number
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - SerialNumber desc
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Equipment
+            - Equipment desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of BookSerialNumber_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /BookSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}:
+    parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get entity from BookSerialNumber by key
+      tags:
+      - Physical Inventory Book Serial Number
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /BookSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_PhysicalInventoryDocumentItem
+  : parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get related _PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Book Serial Number
+      - Physical Inventory Document Item
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Material
+            - Plant
+            - StorageLocation
+            - Batch
+            - ValuationType
+            - InventorySpecialStockType
+            - PhysicalInventoryStockType
+            - SalesOrder
+            - SalesOrderItem
+            - ScheduleLine
+            - Supplier
+            - Customer
+            - StockOwner
+            - LastChangedByUser
+            - LastChangeDate
+            - CountedByUser
+            - PhysicalInventoryLastCountDate
+            - AdjustmentPostingMadeByUser
+            - PostingDate
+            - PhysicalInventoryItemIsCounted
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsDeleted
+            - IsHandledInAltvUnitOfMsr
+            - BookQtyBfrCountInMatlBaseUnit
+            - PhysicalInventoryItemIsZero
+            - Quantity
+            - MaterialBaseUnit
+            - QuantityInUnitOfEntry
+            - UnitOfEntry
+            - MaterialDocumentYear
+            - MaterialDocument
+            - MaterialDocumentItem
+            - PhysInvtryRecountDocument
+            - DifferenceAmountInCoCodeCrcy
+            - Currency
+            - CycleCountType
+            - WBSElementInternalID
+            - ProjectElementUUID
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - DiffAmountOnCountEntryInCCCrcy
+            - EnteredSlsAmtInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy
+            - IsValueOnlyMaterial
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy
+            - ProductCategory
+            - ReasonForPhysInvtryDifference
+            - CrossPlantConfigurableMaterial
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntryISOCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _BookSerialNumber
+            - _CountSerialNumber
+            - _PhysicalInventoryDocument
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /BookSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_PhysInvtryDoc:
+    parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get related _PhysInvtryDoc
+      tags:
+      - Physical Inventory Book Serial Number
+      - Physical Inventory Document Header
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - FiscalYear
+            - InventoryTransactionType
+            - Plant
+            - StorageLocation
+            - InventorySpecialStockType
+            - DocumentDate
+            - PhysInventoryPlannedCountDate
+            - PhysicalInventoryLastCountDate
+            - PostingDate
+            - PostingFiscalPeriod
+            - CreatedByUserName
+            - PostingIsBlockedForPhysInvtry
+            - PhysicalInventoryCountStatus
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInventoryReferenceNumber
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDocHasQtySnapshot
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroup
+            - PhysicalInventoryNumber
+            - PhysicalInventoryDocumentDesc
+            - LastChangeDateTime
+            - SalesPriceValuationIsActive
+            - CountingVarianceInPercent
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /CountSerialNumber:
+    get:
+      summary: Get entities from CountSerialNumber
+      tags:
+      - Physical Inventory Count Serial Number
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - SerialNumber desc
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Equipment
+            - Equipment desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of CountSerialNumber_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /CountSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}:
+    parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get entity from CountSerialNumber by key
+      tags:
+      - Physical Inventory Count Serial Number
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    delete:
+      summary: Delete entity from CountSerialNumber
+      tags:
+      - Physical Inventory Count Serial Number
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /CountSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/SAP__self.ChangeSerialNumber
+  : post:
+      summary: Invoke action ChangeSerialNumber
+      tags:
+      - Physical Inventory Count Serial Number
+      parameters:
+      - name: SerialNumber
+        in: path
+        required: true
+        description: Serial Number
+        schema:
+          type: string
+          maxLength: 18
+      - name: FiscalYear
+        in: path
+        required: true
+        description: Fiscal Year
+        schema:
+          type: string
+          maxLength: 4
+      - name: PhysicalInventoryDocument
+        in: path
+        required: true
+        description: Physical Inventory Document
+        schema:
+          type: string
+          maxLength: 10
+      - name: PhysicalInventoryDocumentItem
+        in: path
+        required: true
+        description: Line Number
+        schema:
+          type: string
+          maxLength: 3
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                NewSerialNumber:
+                  type: string
+                  maxLength: 18
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                nullable: true
+                allOf:
+                - $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /CountSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_PhysicalInventoryDocumentItem
+  : parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get related _PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Count Serial Number
+      - Physical Inventory Document Item
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Material
+            - Plant
+            - StorageLocation
+            - Batch
+            - ValuationType
+            - InventorySpecialStockType
+            - PhysicalInventoryStockType
+            - SalesOrder
+            - SalesOrderItem
+            - ScheduleLine
+            - Supplier
+            - Customer
+            - StockOwner
+            - LastChangedByUser
+            - LastChangeDate
+            - CountedByUser
+            - PhysicalInventoryLastCountDate
+            - AdjustmentPostingMadeByUser
+            - PostingDate
+            - PhysicalInventoryItemIsCounted
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsDeleted
+            - IsHandledInAltvUnitOfMsr
+            - BookQtyBfrCountInMatlBaseUnit
+            - PhysicalInventoryItemIsZero
+            - Quantity
+            - MaterialBaseUnit
+            - QuantityInUnitOfEntry
+            - UnitOfEntry
+            - MaterialDocumentYear
+            - MaterialDocument
+            - MaterialDocumentItem
+            - PhysInvtryRecountDocument
+            - DifferenceAmountInCoCodeCrcy
+            - Currency
+            - CycleCountType
+            - WBSElementInternalID
+            - ProjectElementUUID
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - DiffAmountOnCountEntryInCCCrcy
+            - EnteredSlsAmtInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy
+            - IsValueOnlyMaterial
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy
+            - ProductCategory
+            - ReasonForPhysInvtryDifference
+            - CrossPlantConfigurableMaterial
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntryISOCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _BookSerialNumber
+            - _CountSerialNumber
+            - _PhysicalInventoryDocument
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /CountSerialNumber/{SerialNumber}/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_PhysInvtryDoc:
+    parameters:
+    - name: SerialNumber
+      in: path
+      required: true
+      description: Serial Number
+      schema:
+        type: string
+        maxLength: 18
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Line Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get related _PhysInvtryDoc
+      tags:
+      - Physical Inventory Count Serial Number
+      - Physical Inventory Document Header
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - FiscalYear
+            - InventoryTransactionType
+            - Plant
+            - StorageLocation
+            - InventorySpecialStockType
+            - DocumentDate
+            - PhysInventoryPlannedCountDate
+            - PhysicalInventoryLastCountDate
+            - PostingDate
+            - PostingFiscalPeriod
+            - CreatedByUserName
+            - PostingIsBlockedForPhysInvtry
+            - PhysicalInventoryCountStatus
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInventoryReferenceNumber
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDocHasQtySnapshot
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroup
+            - PhysicalInventoryNumber
+            - PhysicalInventoryDocumentDesc
+            - LastChangeDateTime
+            - SalesPriceValuationIsActive
+            - CountingVarianceInPercent
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument:
+    get:
+      summary: Get entities from PhysicalInventoryDocument
+      tags:
+      - Physical Inventory Document Header
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - FiscalYear
+            - FiscalYear desc
+            - InventoryTransactionType
+            - InventoryTransactionType desc
+            - Plant
+            - Plant desc
+            - StorageLocation
+            - StorageLocation desc
+            - InventorySpecialStockType
+            - InventorySpecialStockType desc
+            - DocumentDate
+            - DocumentDate desc
+            - PhysInventoryPlannedCountDate
+            - PhysInventoryPlannedCountDate desc
+            - PhysicalInventoryLastCountDate
+            - PhysicalInventoryLastCountDate desc
+            - PostingDate
+            - PostingDate desc
+            - PostingFiscalPeriod
+            - PostingFiscalPeriod desc
+            - CreatedByUserName
+            - CreatedByUserName desc
+            - PostingIsBlockedForPhysInvtry
+            - PostingIsBlockedForPhysInvtry desc
+            - PhysicalInventoryCountStatus
+            - PhysicalInventoryCountStatus desc
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInvtryAdjustmentPostingSts desc
+            - PhysInventoryReferenceNumber
+            - PhysInventoryReferenceNumber desc
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDeletionStatus desc
+            - PhysInvtryDocHasQtySnapshot
+            - PhysInvtryDocHasQtySnapshot desc
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroupType desc
+            - PhysicalInventoryGroup
+            - PhysicalInventoryGroup desc
+            - PhysicalInventoryNumber
+            - PhysicalInventoryNumber desc
+            - PhysicalInventoryDocumentDesc
+            - PhysicalInventoryDocumentDesc desc
+            - LastChangeDateTime
+            - LastChangeDateTime desc
+            - SalesPriceValuationIsActive
+            - SalesPriceValuationIsActive desc
+            - CountingVarianceInPercent
+            - CountingVarianceInPercent desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - FiscalYear
+            - InventoryTransactionType
+            - Plant
+            - StorageLocation
+            - InventorySpecialStockType
+            - DocumentDate
+            - PhysInventoryPlannedCountDate
+            - PhysicalInventoryLastCountDate
+            - PostingDate
+            - PostingFiscalPeriod
+            - CreatedByUserName
+            - PostingIsBlockedForPhysInvtry
+            - PhysicalInventoryCountStatus
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInventoryReferenceNumber
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDocHasQtySnapshot
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroup
+            - PhysicalInventoryNumber
+            - PhysicalInventoryDocumentDesc
+            - LastChangeDateTime
+            - SalesPriceValuationIsActive
+            - CountingVarianceInPercent
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of PhysicalInventoryDocument_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    post:
+      summary: Add new entity to PhysicalInventoryDocument
+      tags:
+      - Physical Inventory Document Header
+      requestBody:
+        required: true
+        description: New entity
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-create'
+      responses:
+        '201':
+          description: Created entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument/SAP__self.PrintPhysicalInventoryItems:
+    post:
+      summary: Invoke action PrintPhysicalInventoryItems
+      tags:
+      - Physical Inventory Document Header
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PInvItmPrntIsSortedBySpclStk:
+                  type: boolean
+                PInvPrntSerialNumberSortOrder:
+                  type: string
+                  maxLength: 1
+                PrintQueue:
+                  type: string
+                  maxLength: 32
+                _Items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocPrintItemKeysP'
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument/{PhysicalInventoryDocument}/{FiscalYear}:
+    parameters:
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    get:
+      summary: Get entity from PhysicalInventoryDocument by key
+      tags:
+      - Physical Inventory Document Header
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - FiscalYear
+            - InventoryTransactionType
+            - Plant
+            - StorageLocation
+            - InventorySpecialStockType
+            - DocumentDate
+            - PhysInventoryPlannedCountDate
+            - PhysicalInventoryLastCountDate
+            - PostingDate
+            - PostingFiscalPeriod
+            - CreatedByUserName
+            - PostingIsBlockedForPhysInvtry
+            - PhysicalInventoryCountStatus
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInventoryReferenceNumber
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDocHasQtySnapshot
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroup
+            - PhysicalInventoryNumber
+            - PhysicalInventoryDocumentDesc
+            - LastChangeDateTime
+            - SalesPriceValuationIsActive
+            - CountingVarianceInPercent
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    patch:
+      summary: Update entity in PhysicalInventoryDocument
+      tags:
+      - Physical Inventory Document Header
+      requestBody:
+        required: true
+        description: New property values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-update'
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+    delete:
+      summary: Delete entity from PhysicalInventoryDocument
+      tags:
+      - Physical Inventory Document Header
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument/{PhysicalInventoryDocument}/{FiscalYear}/SAP__self.RecountPhysicalInventoryDocumentItem:
+    post:
+      summary: Invoke action RecountPhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Document Header
+      parameters:
+      - name: PhysicalInventoryDocument
+        in: path
+        required: true
+        description: Physical Inventory Document
+        schema:
+          type: string
+          maxLength: 10
+      - name: FiscalYear
+        in: path
+        required: true
+        description: Fiscal Year
+        schema:
+          type: string
+          maxLength: 4
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PhysInventoryPlannedCountDate:
+                  type: string
+                  nullable: true
+                  format: date
+                  example: '2017-04-13'
+                DocumentDate:
+                  type: string
+                  nullable: true
+                  format: date
+                  example: '2017-04-13'
+                PostingIsBlockedForPhysInvtry:
+                  type: boolean
+                PhysInvtryDocHasQtySnapshot:
+                  type: boolean
+                PhysicalInventoryNumber:
+                  type: string
+                  maxLength: 16
+                PhysInventoryReferenceNumber:
+                  type: string
+                  maxLength: 16
+                PhysicalInventoryDocumentDesc:
+                  type: string
+                  maxLength: 40
+                _Items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocRecountItemKeysP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument/{PhysicalInventoryDocument}/{FiscalYear}/SAP__self.DeleteLogically:
+    post:
+      summary: Invoke action DeleteLogically
+      tags:
+      - Physical Inventory Document Header
+      parameters:
+      - name: PhysicalInventoryDocument
+        in: path
+        required: true
+        description: Physical Inventory Document
+        schema:
+          type: string
+          maxLength: 10
+      - name: FiscalYear
+        in: path
+        required: true
+        description: Fiscal Year
+        schema:
+          type: string
+          maxLength: 4
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocument/{PhysicalInventoryDocument}/{FiscalYear}/_PhysicalInventoryDocumentItem:
+    parameters:
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    get:
+      summary: Get entities from related _PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Document Header
+      - Physical Inventory Document Item
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Material
+            - Material desc
+            - Plant
+            - Plant desc
+            - StorageLocation
+            - StorageLocation desc
+            - Batch
+            - Batch desc
+            - ValuationType
+            - ValuationType desc
+            - InventorySpecialStockType
+            - InventorySpecialStockType desc
+            - PhysicalInventoryStockType
+            - PhysicalInventoryStockType desc
+            - SalesOrder
+            - SalesOrder desc
+            - SalesOrderItem
+            - SalesOrderItem desc
+            - ScheduleLine
+            - ScheduleLine desc
+            - Supplier
+            - Supplier desc
+            - Customer
+            - Customer desc
+            - StockOwner
+            - StockOwner desc
+            - LastChangedByUser
+            - LastChangedByUser desc
+            - LastChangeDate
+            - LastChangeDate desc
+            - CountedByUser
+            - CountedByUser desc
+            - PhysicalInventoryLastCountDate
+            - PhysicalInventoryLastCountDate desc
+            - AdjustmentPostingMadeByUser
+            - AdjustmentPostingMadeByUser desc
+            - PostingDate
+            - PostingDate desc
+            - PhysicalInventoryItemIsCounted
+            - PhysicalInventoryItemIsCounted desc
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryDifferenceIsPosted desc
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsRecounted desc
+            - PhysInvtryItemIsDeleted
+            - PhysInvtryItemIsDeleted desc
+            - IsHandledInAltvUnitOfMsr
+            - IsHandledInAltvUnitOfMsr desc
+            - BookQtyBfrCountInMatlBaseUnit
+            - BookQtyBfrCountInMatlBaseUnit desc
+            - PhysicalInventoryItemIsZero
+            - PhysicalInventoryItemIsZero desc
+            - Quantity
+            - Quantity desc
+            - MaterialBaseUnit
+            - MaterialBaseUnit desc
+            - QuantityInUnitOfEntry
+            - QuantityInUnitOfEntry desc
+            - UnitOfEntry
+            - UnitOfEntry desc
+            - MaterialDocumentYear
+            - MaterialDocumentYear desc
+            - MaterialDocument
+            - MaterialDocument desc
+            - MaterialDocumentItem
+            - MaterialDocumentItem desc
+            - PhysInvtryRecountDocument
+            - PhysInvtryRecountDocument desc
+            - DifferenceAmountInCoCodeCrcy
+            - DifferenceAmountInCoCodeCrcy desc
+            - Currency
+            - Currency desc
+            - CycleCountType
+            - CycleCountType desc
+            - WBSElementInternalID
+            - WBSElementInternalID desc
+            - ProjectElementUUID
+            - ProjectElementUUID desc
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtInclVATInCoCodeCrcy desc
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy desc
+            - DiffAmountOnCountEntryInCCCrcy
+            - DiffAmountOnCountEntryInCCCrcy desc
+            - EnteredSlsAmtInCoCodeCrcy
+            - EnteredSlsAmtInCoCodeCrcy desc
+            - SlsPriceAmountInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy desc
+            - IsValueOnlyMaterial
+            - IsValueOnlyMaterial desc
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - PhysInvtryCtAmtInCoCodeCrcy desc
+            - BookQtyAmountInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy desc
+            - ProductCategory
+            - ProductCategory desc
+            - ReasonForPhysInvtryDifference
+            - ReasonForPhysInvtryDifference desc
+            - CrossPlantConfigurableMaterial
+            - CrossPlantConfigurableMaterial desc
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryDiffIsDistributed desc
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitSAPCode desc
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryMatlBaseUnitISOCode desc
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntrySAPCode desc
+            - PhysInvtryUnitOfEntryISOCode
+            - PhysInvtryUnitOfEntryISOCode desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Material
+            - Plant
+            - StorageLocation
+            - Batch
+            - ValuationType
+            - InventorySpecialStockType
+            - PhysicalInventoryStockType
+            - SalesOrder
+            - SalesOrderItem
+            - ScheduleLine
+            - Supplier
+            - Customer
+            - StockOwner
+            - LastChangedByUser
+            - LastChangeDate
+            - CountedByUser
+            - PhysicalInventoryLastCountDate
+            - AdjustmentPostingMadeByUser
+            - PostingDate
+            - PhysicalInventoryItemIsCounted
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsDeleted
+            - IsHandledInAltvUnitOfMsr
+            - BookQtyBfrCountInMatlBaseUnit
+            - PhysicalInventoryItemIsZero
+            - Quantity
+            - MaterialBaseUnit
+            - QuantityInUnitOfEntry
+            - UnitOfEntry
+            - MaterialDocumentYear
+            - MaterialDocument
+            - MaterialDocumentItem
+            - PhysInvtryRecountDocument
+            - DifferenceAmountInCoCodeCrcy
+            - Currency
+            - CycleCountType
+            - WBSElementInternalID
+            - ProjectElementUUID
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - DiffAmountOnCountEntryInCCCrcy
+            - EnteredSlsAmtInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy
+            - IsValueOnlyMaterial
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy
+            - ProductCategory
+            - ReasonForPhysInvtryDifference
+            - CrossPlantConfigurableMaterial
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntryISOCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _BookSerialNumber
+            - _CountSerialNumber
+            - _PhysicalInventoryDocument
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of PhysicalInventoryDocumentItem_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    post:
+      summary: Add new entity to related _PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Document Header
+      - Physical Inventory Document Item
+      requestBody:
+        required: true
+        description: New entity
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-create'
+      responses:
+        '201':
+          description: Created entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocumentItem:
+    get:
+      summary: Get entities from PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Document Item
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Material
+            - Material desc
+            - Plant
+            - Plant desc
+            - StorageLocation
+            - StorageLocation desc
+            - Batch
+            - Batch desc
+            - ValuationType
+            - ValuationType desc
+            - InventorySpecialStockType
+            - InventorySpecialStockType desc
+            - PhysicalInventoryStockType
+            - PhysicalInventoryStockType desc
+            - SalesOrder
+            - SalesOrder desc
+            - SalesOrderItem
+            - SalesOrderItem desc
+            - ScheduleLine
+            - ScheduleLine desc
+            - Supplier
+            - Supplier desc
+            - Customer
+            - Customer desc
+            - StockOwner
+            - StockOwner desc
+            - LastChangedByUser
+            - LastChangedByUser desc
+            - LastChangeDate
+            - LastChangeDate desc
+            - CountedByUser
+            - CountedByUser desc
+            - PhysicalInventoryLastCountDate
+            - PhysicalInventoryLastCountDate desc
+            - AdjustmentPostingMadeByUser
+            - AdjustmentPostingMadeByUser desc
+            - PostingDate
+            - PostingDate desc
+            - PhysicalInventoryItemIsCounted
+            - PhysicalInventoryItemIsCounted desc
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryDifferenceIsPosted desc
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsRecounted desc
+            - PhysInvtryItemIsDeleted
+            - PhysInvtryItemIsDeleted desc
+            - IsHandledInAltvUnitOfMsr
+            - IsHandledInAltvUnitOfMsr desc
+            - BookQtyBfrCountInMatlBaseUnit
+            - BookQtyBfrCountInMatlBaseUnit desc
+            - PhysicalInventoryItemIsZero
+            - PhysicalInventoryItemIsZero desc
+            - Quantity
+            - Quantity desc
+            - MaterialBaseUnit
+            - MaterialBaseUnit desc
+            - QuantityInUnitOfEntry
+            - QuantityInUnitOfEntry desc
+            - UnitOfEntry
+            - UnitOfEntry desc
+            - MaterialDocumentYear
+            - MaterialDocumentYear desc
+            - MaterialDocument
+            - MaterialDocument desc
+            - MaterialDocumentItem
+            - MaterialDocumentItem desc
+            - PhysInvtryRecountDocument
+            - PhysInvtryRecountDocument desc
+            - DifferenceAmountInCoCodeCrcy
+            - DifferenceAmountInCoCodeCrcy desc
+            - Currency
+            - Currency desc
+            - CycleCountType
+            - CycleCountType desc
+            - WBSElementInternalID
+            - WBSElementInternalID desc
+            - ProjectElementUUID
+            - ProjectElementUUID desc
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtInclVATInCoCodeCrcy desc
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy desc
+            - DiffAmountOnCountEntryInCCCrcy
+            - DiffAmountOnCountEntryInCCCrcy desc
+            - EnteredSlsAmtInCoCodeCrcy
+            - EnteredSlsAmtInCoCodeCrcy desc
+            - SlsPriceAmountInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy desc
+            - IsValueOnlyMaterial
+            - IsValueOnlyMaterial desc
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - PhysInvtryCtAmtInCoCodeCrcy desc
+            - BookQtyAmountInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy desc
+            - ProductCategory
+            - ProductCategory desc
+            - ReasonForPhysInvtryDifference
+            - ReasonForPhysInvtryDifference desc
+            - CrossPlantConfigurableMaterial
+            - CrossPlantConfigurableMaterial desc
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryDiffIsDistributed desc
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitSAPCode desc
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryMatlBaseUnitISOCode desc
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntrySAPCode desc
+            - PhysInvtryUnitOfEntryISOCode
+            - PhysInvtryUnitOfEntryISOCode desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Material
+            - Plant
+            - StorageLocation
+            - Batch
+            - ValuationType
+            - InventorySpecialStockType
+            - PhysicalInventoryStockType
+            - SalesOrder
+            - SalesOrderItem
+            - ScheduleLine
+            - Supplier
+            - Customer
+            - StockOwner
+            - LastChangedByUser
+            - LastChangeDate
+            - CountedByUser
+            - PhysicalInventoryLastCountDate
+            - AdjustmentPostingMadeByUser
+            - PostingDate
+            - PhysicalInventoryItemIsCounted
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsDeleted
+            - IsHandledInAltvUnitOfMsr
+            - BookQtyBfrCountInMatlBaseUnit
+            - PhysicalInventoryItemIsZero
+            - Quantity
+            - MaterialBaseUnit
+            - QuantityInUnitOfEntry
+            - UnitOfEntry
+            - MaterialDocumentYear
+            - MaterialDocument
+            - MaterialDocumentItem
+            - PhysInvtryRecountDocument
+            - DifferenceAmountInCoCodeCrcy
+            - Currency
+            - CycleCountType
+            - WBSElementInternalID
+            - ProjectElementUUID
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - DiffAmountOnCountEntryInCCCrcy
+            - EnteredSlsAmtInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy
+            - IsValueOnlyMaterial
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy
+            - ProductCategory
+            - ReasonForPhysInvtryDifference
+            - CrossPlantConfigurableMaterial
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntryISOCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _BookSerialNumber
+            - _CountSerialNumber
+            - _PhysicalInventoryDocument
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of PhysicalInventoryDocumentItem_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}:
+    parameters:
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Physical Inventory Item Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get entity from PhysicalInventoryDocumentItem by key
+      tags:
+      - Physical Inventory Document Item
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Material
+            - Plant
+            - StorageLocation
+            - Batch
+            - ValuationType
+            - InventorySpecialStockType
+            - PhysicalInventoryStockType
+            - SalesOrder
+            - SalesOrderItem
+            - ScheduleLine
+            - Supplier
+            - Customer
+            - StockOwner
+            - LastChangedByUser
+            - LastChangeDate
+            - CountedByUser
+            - PhysicalInventoryLastCountDate
+            - AdjustmentPostingMadeByUser
+            - PostingDate
+            - PhysicalInventoryItemIsCounted
+            - PhysInvtryDifferenceIsPosted
+            - PhysInvtryItemIsRecounted
+            - PhysInvtryItemIsDeleted
+            - IsHandledInAltvUnitOfMsr
+            - BookQtyBfrCountInMatlBaseUnit
+            - PhysicalInventoryItemIsZero
+            - Quantity
+            - MaterialBaseUnit
+            - QuantityInUnitOfEntry
+            - UnitOfEntry
+            - MaterialDocumentYear
+            - MaterialDocument
+            - MaterialDocumentItem
+            - PhysInvtryRecountDocument
+            - DifferenceAmountInCoCodeCrcy
+            - Currency
+            - CycleCountType
+            - WBSElementInternalID
+            - ProjectElementUUID
+            - SlsPrcAmtInclVATInCoCodeCrcy
+            - SlsPrcAmtExclVATInCoCodeCrcy
+            - DiffAmountOnCountEntryInCCCrcy
+            - EnteredSlsAmtInCoCodeCrcy
+            - SlsPriceAmountInCoCodeCrcy
+            - IsValueOnlyMaterial
+            - PhysInvtryCtAmtInCoCodeCrcy
+            - BookQtyAmountInCoCodeCrcy
+            - ProductCategory
+            - ReasonForPhysInvtryDifference
+            - CrossPlantConfigurableMaterial
+            - PhysInvtryDiffIsDistributed
+            - PhysInvtryMatlBaseUnitSAPCode
+            - PhysInvtryMatlBaseUnitISOCode
+            - PhysInvtryUnitOfEntrySAPCode
+            - PhysInvtryUnitOfEntryISOCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _BookSerialNumber
+            - _CountSerialNumber
+            - _PhysicalInventoryDocument
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    patch:
+      summary: Update entity in PhysicalInventoryDocumentItem
+      tags:
+      - Physical Inventory Document Item
+      requestBody:
+        required: true
+        description: New property values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-update'
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/SAP__self.PostPhysicalInventoryDifference
+  : post:
+      summary: Invoke action PostPhysicalInventoryDifference
+      tags:
+      - Physical Inventory Document Item
+      parameters:
+      - name: FiscalYear
+        in: path
+        required: true
+        description: Fiscal Year
+        schema:
+          type: string
+          maxLength: 4
+      - name: PhysicalInventoryDocument
+        in: path
+        required: true
+        description: Physical Inventory Document
+        schema:
+          type: string
+          maxLength: 10
+      - name: PhysicalInventoryDocumentItem
+        in: path
+        required: true
+        description: Physical Inventory Item Number
+        schema:
+          type: string
+          maxLength: 3
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PostingDate:
+                  type: string
+                  nullable: true
+                  format: date
+                  example: '2017-04-13'
+                ReasonForPhysInvtryDifference:
+                  type: string
+                  maxLength: 4
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/SAP__self.DeleteLogically
+  : post:
+      summary: Invoke action DeleteLogically
+      tags:
+      - Physical Inventory Document Item
+      parameters:
+      - name: FiscalYear
+        in: path
+        required: true
+        description: Fiscal Year
+        schema:
+          type: string
+          maxLength: 4
+      - name: PhysicalInventoryDocument
+        in: path
+        required: true
+        description: Physical Inventory Document
+        schema:
+          type: string
+          maxLength: 10
+      - name: PhysicalInventoryDocumentItem
+        in: path
+        required: true
+        description: Physical Inventory Item Number
+        schema:
+          type: string
+          maxLength: 3
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_BookSerialNumber:
+    parameters:
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Physical Inventory Item Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get entities from related _BookSerialNumber
+      tags:
+      - Physical Inventory Document Item
+      - Physical Inventory Book Serial Number
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - SerialNumber desc
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Equipment
+            - Equipment desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of BookSerialNumber_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_CountSerialNumber:
+    parameters:
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Physical Inventory Item Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get entities from related _CountSerialNumber
+      tags:
+      - Physical Inventory Document Item
+      - Physical Inventory Count Serial Number
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - SerialNumber desc
+            - FiscalYear
+            - FiscalYear desc
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocument desc
+            - PhysicalInventoryDocumentItem
+            - PhysicalInventoryDocumentItem desc
+            - Equipment
+            - Equipment desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - SerialNumber
+            - FiscalYear
+            - PhysicalInventoryDocument
+            - PhysicalInventoryDocumentItem
+            - Equipment
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+            - _PhysInvtryDoc
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of CountSerialNumber_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+    post:
+      summary: Add new entity to related _CountSerialNumber
+      tags:
+      - Physical Inventory Document Item
+      - Physical Inventory Count Serial Number
+      requestBody:
+        required: true
+        description: New entity
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type-create'
+      responses:
+        '201':
+          description: Created entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  ? /PhysicalInventoryDocumentItem/{FiscalYear}/{PhysicalInventoryDocument}/{PhysicalInventoryDocumentItem}/_PhysicalInventoryDocument
+  : parameters:
+    - name: FiscalYear
+      in: path
+      required: true
+      description: Fiscal Year
+      schema:
+        type: string
+        maxLength: 4
+    - name: PhysicalInventoryDocument
+      in: path
+      required: true
+      description: Physical Inventory Document
+      schema:
+        type: string
+        maxLength: 10
+    - name: PhysicalInventoryDocumentItem
+      in: path
+      required: true
+      description: Physical Inventory Item Number
+      schema:
+        type: string
+        maxLength: 3
+    get:
+      summary: Get related _PhysicalInventoryDocument
+      tags:
+      - Physical Inventory Document Item
+      - Physical Inventory Document Header
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - PhysicalInventoryDocument
+            - FiscalYear
+            - InventoryTransactionType
+            - Plant
+            - StorageLocation
+            - InventorySpecialStockType
+            - DocumentDate
+            - PhysInventoryPlannedCountDate
+            - PhysicalInventoryLastCountDate
+            - PostingDate
+            - PostingFiscalPeriod
+            - CreatedByUserName
+            - PostingIsBlockedForPhysInvtry
+            - PhysicalInventoryCountStatus
+            - PhysInvtryAdjustmentPostingSts
+            - PhysInventoryReferenceNumber
+            - PhysInvtryDeletionStatus
+            - PhysInvtryDocHasQtySnapshot
+            - PhysicalInventoryGroupType
+            - PhysicalInventoryGroup
+            - PhysicalInventoryNumber
+            - PhysicalInventoryDocumentDesc
+            - LastChangeDateTime
+            - SalesPriceValuationIsActive
+            - CountingVarianceInPercent
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysicalInventoryDocumentItem
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /$batch:
+    post:
+      summary: Send a group of requests
+      description: |-
+        Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).
+
+        *Please note that "Try it out" is not supported for this request.*
+      tags:
+      - Batch Requests
+      requestBody:
+        required: true
+        description: Batch request
+        content:
+          multipart/mixed;boundary=request-separator:
+            schema:
+              type: string
+            example: |-
+              --request-separator
+              Content-Type: application/http
+              Content-Transfer-Encoding: binary
+
+              GET BookSerialNumber HTTP/1.1
+              Accept: application/json
+
+
+              --request-separator--
+      responses:
+        '200':
+          description: Batch response
+          content:
+            multipart/mixed:
+              schema:
+                type: string
+              example: |-
+                --response-separator
+                Content-Type: application/http
+
+                HTTP/1.1 200 OK
+                Content-Type: application/json
+
+                {...}
+                --response-separator--
+        4XX:
+          $ref: '#/components/responses/error'
+components:
+  schemas:
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type:
+      type: object
+      properties:
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Physical Inventory Document
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+        InventoryTransactionType:
+          type: string
+          maxLength: 2
+          title: Inventory Transaction Type
+        Plant:
+          type: string
+          maxLength: 4
+          title: Plant
+        StorageLocation:
+          type: string
+          maxLength: 4
+          title: Storage Location
+        InventorySpecialStockType:
+          type: string
+          maxLength: 1
+          title: Special Stock
+          description: Special Stock Indicator
+        DocumentDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Document Date
+          description: Document Date in Document
+        PhysInventoryPlannedCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Planned Count Date
+          description: Planned Date of Inventory Count
+        PhysicalInventoryLastCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Count Date
+          description: Date of Last Count
+        PostingDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Posting Date
+          description: Posting Date in the Document
+        PostingFiscalPeriod:
+          type: string
+          maxLength: 2
+          title: Posting Period
+        CreatedByUserName:
+          type: string
+          maxLength: 12
+          title: Created By
+          description: Physical Inventory Created by User
+        PostingIsBlockedForPhysInvtry:
+          type: boolean
+          title: Posting Block
+          description: Posting Block Due to Physical Inventory
+        PhysicalInventoryCountStatus:
+          type: string
+          maxLength: 1
+          title: Count Status
+        PhysInvtryAdjustmentPostingSts:
+          type: string
+          maxLength: 1
+          title: Adjustment Status
+          description: Status of Adjustment Posting (Inventory Differences)
+        PhysInventoryReferenceNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Reference
+        PhysInvtryDeletionStatus:
+          type: string
+          maxLength: 1
+          title: Deletion Status
+          description: Status of Deletion
+        PhysInvtryDocHasQtySnapshot:
+          type: boolean
+          title: Book Inventory Freeze
+        PhysicalInventoryGroupType:
+          type: string
+          maxLength: 2
+          title: Grouping Type
+          description: Type of Grouping Criterion
+        PhysicalInventoryGroup:
+          type: string
+          maxLength: 10
+          title: Grouping Criterion
+          description: Grouping Criterion of Physical Inventory Document Item
+        PhysicalInventoryNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Number
+        PhysicalInventoryDocumentDesc:
+          type: string
+          maxLength: 40
+          title: PI Doc Description
+          description: Description of Physical Inventory Document
+        LastChangeDateTime:
+          type: string
+          nullable: true
+          format: date-time
+          example: '2017-04-13T15:51:04Z'
+          title: Last Change
+          description: Last Change Timestamp
+        SalesPriceValuationIsActive:
+          type: boolean
+          title: Is Sales Price Valuation Active
+        CountingVarianceInPercent:
+          type: string
+          maxLength: 3
+          title: Variance in %
+          description: 'Percentage Variance: Inventory Count Result/Book Quantity'
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message'
+        _PhysicalInventoryDocumentItem:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+      title: Physical Inventory Document Header
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-create:
+      type: object
+      properties:
+        Plant:
+          type: string
+          maxLength: 4
+          title: Plant
+        StorageLocation:
+          type: string
+          maxLength: 4
+          title: Storage Location
+        InventorySpecialStockType:
+          type: string
+          maxLength: 1
+          title: Special Stock
+          description: Special Stock Indicator
+        DocumentDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Document Date
+          description: Document Date in Document
+        PhysInventoryPlannedCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Planned Count Date
+          description: Planned Date of Inventory Count
+        PhysicalInventoryLastCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Count Date
+          description: Date of Last Count
+        PostingIsBlockedForPhysInvtry:
+          type: boolean
+          title: Posting Block
+          description: Posting Block Due to Physical Inventory
+        PhysInventoryReferenceNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Reference
+        PhysInvtryDocHasQtySnapshot:
+          type: boolean
+          title: Book Inventory Freeze
+        PhysicalInventoryGroupType:
+          type: string
+          maxLength: 2
+          title: Grouping Type
+          description: Type of Grouping Criterion
+        PhysicalInventoryNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Number
+        PhysicalInventoryDocumentDesc:
+          type: string
+          maxLength: 40
+          title: PI Doc Description
+          description: Description of Physical Inventory Document
+        CountingVarianceInPercent:
+          type: string
+          maxLength: 3
+          title: Variance in %
+          description: 'Percentage Variance: Inventory Count Result/Book Quantity'
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-create'
+        _PhysicalInventoryDocumentItem:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-create'
+      title: Physical Inventory Document Header (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-update:
+      type: object
+      properties:
+        DocumentDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Document Date
+          description: Document Date in Document
+        PhysInventoryPlannedCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Planned Count Date
+          description: Planned Date of Inventory Count
+        PhysicalInventoryLastCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Count Date
+          description: Date of Last Count
+        PostingIsBlockedForPhysInvtry:
+          type: boolean
+          title: Posting Block
+          description: Posting Block Due to Physical Inventory
+        PhysInventoryReferenceNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Reference
+        PhysInvtryDocHasQtySnapshot:
+          type: boolean
+          title: Book Inventory Freeze
+        PhysicalInventoryNumber:
+          type: string
+          maxLength: 16
+          title: Physical Inventory Number
+        PhysicalInventoryDocumentDesc:
+          type: string
+          maxLength: 40
+          title: PI Doc Description
+          description: Description of Physical Inventory Document
+        CountingVarianceInPercent:
+          type: string
+          maxLength: 3
+          title: Variance in %
+          description: 'Percentage Variance: Inventory Count Result/Book Quantity'
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-update'
+      title: Physical Inventory Document Header (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type:
+      type: object
+      properties:
+        SerialNumber:
+          type: string
+          maxLength: 18
+          title: Serial Number
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Phys. Inventory Doc.
+          description: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Item
+          description: Line Number
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+        _PhysicalInventoryDocumentItem:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        _PhysInvtryDoc:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+      title: Physical Inventory Book Serial Number
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type-create:
+      type: object
+      properties:
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+        _PhysicalInventoryDocumentItem:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-create'
+        _PhysInvtryDoc:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-create'
+      title: Physical Inventory Book Serial Number (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type-update:
+      type: object
+      properties:
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+      title: Physical Inventory Book Serial Number (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type:
+      type: object
+      properties:
+        SerialNumber:
+          type: string
+          maxLength: 18
+          title: Serial Number
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Phys. Inventory Doc.
+          description: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Item
+          description: Line Number
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message'
+        _PhysicalInventoryDocumentItem:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type'
+        _PhysInvtryDoc:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+      title: Physical Inventory Count Serial Number
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type-create:
+      type: object
+      properties:
+        SerialNumber:
+          type: string
+          maxLength: 18
+          title: Serial Number
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-create'
+        _PhysicalInventoryDocumentItem:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-create'
+        _PhysInvtryDoc:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-create'
+      required:
+      - SerialNumber
+      title: Physical Inventory Count Serial Number (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type-update:
+      type: object
+      properties:
+        Equipment:
+          type: string
+          maxLength: 18
+          title: Equipment
+          description: Equipment Number
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-update'
+      title: Physical Inventory Count Serial Number (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type:
+      type: object
+      properties:
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+        Material:
+          type: string
+          maxLength: 40
+          title: Material
+          description: Material Number
+        Plant:
+          type: string
+          maxLength: 4
+          title: Plant
+        StorageLocation:
+          type: string
+          maxLength: 4
+          title: Storage Location
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        ValuationType:
+          type: string
+          maxLength: 10
+          title: Valuation Type
+        InventorySpecialStockType:
+          type: string
+          maxLength: 1
+          title: Special Stock Type
+        PhysicalInventoryStockType:
+          type: string
+          maxLength: 1
+          title: Stock Type
+          description: Stock Type (Physical Inventory)
+        SalesOrder:
+          type: string
+          maxLength: 10
+          title: Sales Order
+          description: Sales Order Number
+        SalesOrderItem:
+          type: string
+          maxLength: 6
+          title: Sales Order Item
+          description: Item Number in Sales Order
+        ScheduleLine:
+          type: string
+          maxLength: 4
+          title: Sales Order Schedule
+          description: Delivery Schedule for Sales Order
+        Supplier:
+          type: string
+          maxLength: 10
+          title: Supplier
+          description: Supplier's Account Number
+        Customer:
+          type: string
+          maxLength: 10
+          title: Customer
+          description: Account number of customer
+        StockOwner:
+          type: string
+          maxLength: 10
+          title: Owner of stock
+        LastChangedByUser:
+          type: string
+          maxLength: 12
+          title: Changed By
+        LastChangeDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Changed On
+          description: Last Changed On
+        CountedByUser:
+          type: string
+          maxLength: 12
+          title: Counted By
+        PhysicalInventoryLastCountDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Count Date
+          description: Date of Last Count
+        AdjustmentPostingMadeByUser:
+          type: string
+          maxLength: 12
+          title: Adjustment Posting Made By
+        PostingDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Posting Date
+          description: Posting Date in the Document
+        PhysicalInventoryItemIsCounted:
+          type: boolean
+          title: Is Counted
+          description: Item is Counted
+        PhysInvtryDifferenceIsPosted:
+          type: boolean
+          title: Is Difference Posted
+          description: Difference of Item is Posted
+        PhysInvtryItemIsRecounted:
+          type: boolean
+          title: Is Recounted
+          description: Item is Recounted
+        PhysInvtryItemIsDeleted:
+          type: boolean
+          title: Is Deleted
+          description: Item is Deleted
+        IsHandledInAltvUnitOfMsr:
+          type: boolean
+          title: Without Unit of Measure Proposal
+        BookQtyBfrCountInMatlBaseUnit:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.999999999999E9
+          maximum: 9.999999999999E9
+          example: 0
+          title: Book Quantity
+          description: Book Quantity Immediately Prior to Count
+        PhysicalInventoryItemIsZero:
+          type: boolean
+          title: Zero Counted
+          description: Is Zero Count
+        Quantity:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.999999999999E9
+          maximum: 9.999999999999E9
+          example: 0
+          title: Counted Quantity
+        MaterialBaseUnit:
+          type: string
+          maxLength: 3
+          title: Base Unit of Measure
+        QuantityInUnitOfEntry:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.999999999999E9
+          maximum: 9.999999999999E9
+          example: 0
+          title: Counted Quantity in Entry Unit
+        UnitOfEntry:
+          type: string
+          maxLength: 3
+          title: Entry Unit
+        MaterialDocumentYear:
+          type: string
+          maxLength: 4
+          title: Material Document Year
+        MaterialDocument:
+          type: string
+          maxLength: 10
+          title: Material Document
+          description: Number of Material Document
+        MaterialDocumentItem:
+          type: string
+          maxLength: 4
+          title: Material Document Item
+        PhysInvtryRecountDocument:
+          type: string
+          maxLength: 10
+          title: Recount Document
+          description: Number of Recount Document
+        DifferenceAmountInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Difference Value
+          description: Value of Difference
+        Currency:
+          type: string
+          maxLength: 3
+          title: Company Code Currency
+        CycleCountType:
+          type: string
+          maxLength: 1
+          title: Cycle Count Type
+        WBSElementInternalID:
+          type: string
+          maxLength: 8
+          title: WBS Internal ID
+          description: WBS Element
+        ProjectElementUUID:
+          type: string
+          nullable: true
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: Entity GUID
+          description: Entity Guid
+        SlsPrcAmtInclVATInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Sales Value inc. VAT
+          description: Value at Sales Prices Including Value-Added Tax
+        SlsPrcAmtExclVATInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Sales Value w/o VAT
+          description: Value at Sales Prices Excluding Value Added Tax
+        DiffAmountOnCountEntryInCCCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Difference Value
+          description: Inventory Difference Value Upon Count Entry
+        EnteredSlsAmtInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Sales Price Counted Value
+          description: Externally Entered Value Based on Sales Price
+        SlsPriceAmountInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Sales Price Book Value
+        IsValueOnlyMaterial:
+          type: boolean
+          title: Is Value-Only Material
+        PhysInvtryCtAmtInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Counted Quantity Value
+        BookQtyAmountInCoCodeCrcy:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          minimum: -9999999999999
+          maximum: 9999999999999
+          example: 0
+          title: Book Value
+        ProductCategory:
+          type: string
+          maxLength: 2
+          title: Material Category
+        ReasonForPhysInvtryDifference:
+          type: string
+          maxLength: 4
+          title: Difference Reason
+        CrossPlantConfigurableMaterial:
+          type: string
+          maxLength: 40
+          title: Cross-Plant Configurable Material
+        PhysInvtryDiffIsDistributed:
+          type: boolean
+          title: Difference Distributed
+          description: Is Difference Distributed
+        PhysInvtryMatlBaseUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: SAP Code Base Unit
+          description: SAP Code of Base Unit of Measure
+        PhysInvtryMatlBaseUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code Base Unit
+          description: ISO Code of Base Unit of Measure
+        PhysInvtryUnitOfEntrySAPCode:
+          type: string
+          maxLength: 3
+          title: SAP Code of Entry Unit
+        PhysInvtryUnitOfEntryISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code of Entry Unit
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message'
+        _BookSerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type'
+        _CountSerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type'
+        _PhysicalInventoryDocument:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type'
+      title: Physical Inventory Document Item
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-create:
+      type: object
+      properties:
+        Material:
+          type: string
+          maxLength: 40
+          title: Material
+          description: Material Number
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        ValuationType:
+          type: string
+          maxLength: 10
+          title: Valuation Type
+        PhysicalInventoryStockType:
+          type: string
+          maxLength: 1
+          title: Stock Type
+          description: Stock Type (Physical Inventory)
+        SalesOrder:
+          type: string
+          maxLength: 10
+          title: Sales Order
+          description: Sales Order Number
+        SalesOrderItem:
+          type: string
+          maxLength: 6
+          title: Sales Order Item
+          description: Item Number in Sales Order
+        Supplier:
+          type: string
+          maxLength: 10
+          title: Supplier
+          description: Supplier's Account Number
+        Customer:
+          type: string
+          maxLength: 10
+          title: Customer
+          description: Account number of customer
+        StockOwner:
+          type: string
+          maxLength: 10
+          title: Owner of stock
+        PhysicalInventoryItemIsZero:
+          type: boolean
+          title: Zero Counted
+          description: Is Zero Count
+        QuantityInUnitOfEntry:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.999999999999E9
+          maximum: 9.999999999999E9
+          example: 0
+          title: Counted Quantity in Entry Unit
+        UnitOfEntry:
+          type: string
+          maxLength: 3
+          title: Entry Unit
+        WBSElementInternalID:
+          type: string
+          maxLength: 8
+          title: WBS Internal ID
+          description: WBS Element
+        ProjectElementUUID:
+          type: string
+          nullable: true
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: Entity GUID
+          description: Entity Guid
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-create'
+        _BookSerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.BookSerialNumber_Type-create'
+        _CountSerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.CountSerialNumber_Type-create'
+        _PhysicalInventoryDocument:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocument_Type-create'
+      title: Physical Inventory Document Item (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.PhysicalInventoryDocumentItem_Type-update:
+      type: object
+      properties:
+        Material:
+          type: string
+          maxLength: 40
+          title: Material
+          description: Material Number
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        ValuationType:
+          type: string
+          maxLength: 10
+          title: Valuation Type
+        PhysicalInventoryStockType:
+          type: string
+          maxLength: 1
+          title: Stock Type
+          description: Stock Type (Physical Inventory)
+        SalesOrder:
+          type: string
+          maxLength: 10
+          title: Sales Order
+          description: Sales Order Number
+        SalesOrderItem:
+          type: string
+          maxLength: 6
+          title: Sales Order Item
+          description: Item Number in Sales Order
+        Supplier:
+          type: string
+          maxLength: 10
+          title: Supplier
+          description: Supplier's Account Number
+        Customer:
+          type: string
+          maxLength: 10
+          title: Customer
+          description: Account number of customer
+        StockOwner:
+          type: string
+          maxLength: 10
+          title: Owner of stock
+        PhysicalInventoryItemIsZero:
+          type: boolean
+          title: Zero Counted
+          description: Is Zero Count
+        QuantityInUnitOfEntry:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 13
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.999999999999E9
+          maximum: 9.999999999999E9
+          example: 0
+          title: Counted Quantity in Entry Unit
+        UnitOfEntry:
+          type: string
+          maxLength: 3
+          title: Entry Unit
+        WBSElementInternalID:
+          type: string
+          maxLength: 8
+          title: WBS Internal ID
+          description: WBS Element
+        ProjectElementUUID:
+          type: string
+          nullable: true
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: Entity GUID
+          description: Entity Guid
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-update'
+      title: Physical Inventory Document Item (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocPrintItemKeysP:
+      type: object
+      properties:
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+      title: D_PInvDocPrintItemKeysP
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocPrintItemKeysP-create:
+      type: object
+      properties:
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+      required:
+      - PhysicalInventoryDocument
+      - PhysicalInventoryDocumentItem
+      - FiscalYear
+      title: D_PInvDocPrintItemKeysP (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocPrintItemKeysP-update:
+      type: object
+      properties:
+        PhysicalInventoryDocument:
+          type: string
+          maxLength: 10
+          title: Physical Inventory Document
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+        FiscalYear:
+          type: string
+          maxLength: 4
+          title: Fiscal Year
+      title: D_PInvDocPrintItemKeysP (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocRecountItemKeysP:
+      type: object
+      properties:
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+      title: D_PInvDocRecountItemKeysP
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocRecountItemKeysP-create:
+      type: object
+      properties:
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+      required:
+      - PhysicalInventoryDocumentItem
+      title: D_PInvDocRecountItemKeysP (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.D_PInvDocRecountItemKeysP-update:
+      type: object
+      properties:
+        PhysicalInventoryDocumentItem:
+          type: string
+          maxLength: 3
+          title: Physical Inventory Document Item
+          description: Physical Inventory Item Number
+      title: D_PInvDocRecountItemKeysP (for update)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-create:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message (for create)
+    com.sap.gateway.srvd_a2x.api_physicalinventorydocument.v0001.SAP__Message-update:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message (for update)
+    count:
+      anyOf:
+      - type: number
+      - type: string
+      description: The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.
+    error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            target:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+                required:
+                - code
+                - message
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  target:
+                    type: string
+            innererror:
+              type: object
+              description: The structure of this object is service-specific
+  parameters:
+    top:
+      name: $top
+      in: query
+      description: Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)
+      schema:
+        type: integer
+        minimum: 0
+      example: 50
+    skip:
+      name: $skip
+      in: query
+      description: Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)
+      schema:
+        type: integer
+        minimum: 0
+    count:
+      name: $count
+      in: query
+      description: Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)
+      schema:
+        type: boolean
+    search:
+      name: $search
+      in: query
+      description: Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)
+      schema:
+        type: string
+  responses:
+    error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+  securitySchemes:
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            OV4:API_PHYSICALINVENTORYDOCUMENT: ''
+          refreshUrl: https://{host}:{port}
+          authorizationUrl: https://{host}:{port}
+          tokenUrl: https://{host}:{port}
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+- OAuth2Auth:
+  - OV4:API_PHYSICALINVENTORYDOCUMENT
+- BasicAuth: []

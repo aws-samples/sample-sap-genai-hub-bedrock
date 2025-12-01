@@ -1,0 +1,2408 @@
+openapi: 3.0.0
+info:
+  title: Warehouse Physical Stock by Product - Read, Update (A2X)
+  version: 1.4.0
+  description: This allows you to analyze the current situation of physical stock in a warehouse. You can request stock information about products in a warehouse. Optionally, you can also read serial numbers. You can post unplanned goods issue for consumption and scrapping.
+externalDocs:
+  description: Business Documentation
+  url: https://help.sap.com/http.svc/ahp2/SAP_S4HANA_CLOUD/2508.latest/EN/68/b18afb9d6d4c0083242919d1a88315/frameset.htm
+x-sap-api-type: ODATAV4
+x-sap-shortText: Retrieve physical stock by product with this synchronous inbound service
+x-sap-software-min-version: '2508'
+x-sap-ext-overview:
+- name: Communication Scenario
+  values:
+  - text: Warehousing - Stock Integration (SAP_COM_0755)
+    format: plain
+- name: Scope Items
+  values:
+  - text: '[Warehouse Inbound Processing (3BR)](https://me.sap.com/processnavigator/SolP/3BR " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Outbound Processing (3BS)](https://me.sap.com/processnavigator/SolP/3BS " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Production Integration (3DV)](https://me.sap.com/processnavigator/SolP/3DV " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Ad Hoc Goods Issue (3BT)](https://me.sap.com/processnavigator/SolP/3BT " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Posting Changes (3BU)](https://me.sap.com/processnavigator/SolP/3BU " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Kanban Supply into Production (3VT)](https://me.sap.com/processnavigator/SolP/3VT " Link To BP ")'
+    format: markdown
+  - text: '[Quality Management in Warehousing (3M0)](https://me.sap.com/processnavigator/SolP/3M0 " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Internal Repacking (3BW)](https://me.sap.com/processnavigator/SolP/3BW " Link To BP ")'
+    format: markdown
+  - text: '[Warehouse Physical Inventory (3BX)](https://me.sap.com/processnavigator/SolP/3BX " Link To BP ")'
+    format: markdown
+  - text: '[Resource Management in Warehousing (3W0)](https://me.sap.com/processnavigator/SolP/3W0 " Link To BP ")'
+    format: markdown
+- name: Authentication Methods
+  values:
+  - text: x509
+    format: plain
+- name: Service Group Name
+  values:
+  - text: API_WHSE_PHYSSTOCKPROD
+    format: plain
+- name: Business Object
+  values:
+  - text: Warehouse Physical Stock Products
+    format: plain
+servers:
+- url: https://{host}:{port}/sap/opu/odata4/sap/api_whse_physstockprod/srvd_a2x/sap/whsephysicalstockproducts/0001
+  variables:
+    host:
+      default: ''
+    port:
+      default: ''
+- url: https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata4/sap/api_whse_physstockprod/srvd_a2x/sap/whsephysicalstockproducts/0001
+x-sap-extensible:
+  supported: 'no'
+tags:
+- name: Warehouse Physical Stock by Product
+- name: Whse Phys Stock by Product Serial Nmbr
+paths:
+  /WarehousePhysicalStockProducts:
+    get:
+      summary: Get entities from WarehousePhysicalStockProducts
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - ParentHandlingUnitUUID desc
+            - StockItemUUID
+            - StockItemUUID desc
+            - EWMWarehouse
+            - EWMWarehouse desc
+            - Product
+            - Product desc
+            - EWMStockType
+            - EWMStockType desc
+            - EWMStockOwner
+            - EWMStockOwner desc
+            - EntitledToDisposeParty
+            - EntitledToDisposeParty desc
+            - EWMStockUsage
+            - EWMStockUsage desc
+            - Batch
+            - Batch desc
+            - StockDocumentCategory
+            - StockDocumentCategory desc
+            - StockDocumentNumber
+            - StockDocumentNumber desc
+            - ExternalStockDocumentNumber
+            - ExternalStockDocumentNumber desc
+            - StockItemNumber
+            - StockItemNumber desc
+            - EWMStockReferenceDocCategory
+            - EWMStockReferenceDocCategory desc
+            - EWMStockReferenceDocument
+            - EWMStockReferenceDocument desc
+            - EWMStockReferenceDocumentItem
+            - EWMStockReferenceDocumentItem desc
+            - StockIdentificationNumber
+            - StockIdentificationNumber desc
+            - WhseQualityInspectionType
+            - WhseQualityInspectionType desc
+            - QualityInspectionDocument
+            - QualityInspectionDocument desc
+            - EWMHghstLvlHandlingUnitNumber
+            - EWMHghstLvlHandlingUnitNumber desc
+            - HandlingUnitNumber
+            - HandlingUnitNumber desc
+            - EWMStorageBin
+            - EWMStorageBin desc
+            - EWMStockQuantityInBaseUnit
+            - EWMStockQuantityInBaseUnit desc
+            - EWMStockQuantityBaseUnit
+            - EWMStockQuantityBaseUnit desc
+            - EWMStockQtyBaseUnitISOCode
+            - EWMStockQtyBaseUnitISOCode desc
+            - EWMStockQtyBaseUnitSAPCode
+            - EWMStockQtyBaseUnitSAPCode desc
+            - EWMStockQuantityAltvUnit
+            - EWMStockQuantityAltvUnit desc
+            - EWMStockQtyAltvUnitISOCode
+            - EWMStockQtyAltvUnitISOCode desc
+            - EWMStockQtyAltvUnitSAPCode
+            - EWMStockQtyAltvUnitSAPCode desc
+            - EWMLoadingOrNetWeight
+            - EWMLoadingOrNetWeight desc
+            - EWMLoadingOrNetWeightUnit
+            - EWMLoadingOrNetWeightUnit desc
+            - EWMLoadgOrNetWgtUntISOCode
+            - EWMLoadgOrNetWgtUntISOCode desc
+            - EWMLoadgOrNetWgtUntSAPCode
+            - EWMLoadgOrNetWgtUntSAPCode desc
+            - EWMLoadingOrNetVolume
+            - EWMLoadingOrNetVolume desc
+            - EWMLoadingOrNetVolumeUnit
+            - EWMLoadingOrNetVolumeUnit desc
+            - EWMLoadgOrNetVolUntISOCode
+            - EWMLoadgOrNetVolUntISOCode desc
+            - EWMLoadgOrNetVolUntSAPCode
+            - EWMLoadgOrNetVolUntSAPCode desc
+            - EWMStorageBinCapConsumptionVal
+            - EWMStorageBinCapConsumptionVal desc
+            - EWMGoodsReceiptDateTime
+            - EWMGoodsReceiptDateTime desc
+            - WarehouseTimeZone
+            - WarehouseTimeZone desc
+            - ShelfLifeExpirationDate
+            - ShelfLifeExpirationDate desc
+            - CountryOfOrigin
+            - CountryOfOrigin desc
+            - EWMBatchIsInRestrictedUseStock
+            - EWMBatchIsInRestrictedUseStock desc
+            - InspectionPartialLot
+            - InspectionPartialLot desc
+            - EWMStockIsBlockedForInventory
+            - EWMStockIsBlockedForInventory desc
+            - EWMConsolidationGroup
+            - EWMConsolidationGroup desc
+            - SerialNumberRequiredLevel
+            - SerialNumberRequiredLevel desc
+            - EWMStorBinIsBlockedForPutaway
+            - EWMStorBinIsBlockedForPutaway desc
+            - EWMStorBinIsBlockedForRemoval
+            - EWMStorBinIsBlockedForRemoval desc
+            - EWMStorBinIsBlockedDueToPInv
+            - EWMStorBinIsBlockedDueToPInv desc
+            - EWMStorageType
+            - EWMStorageType desc
+            - EWMStorageSection
+            - EWMStorageSection desc
+            - SAP__Messages
+            - SAP__Messages desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMWarehouse
+            - Product
+            - EWMStockType
+            - EWMStockOwner
+            - EntitledToDisposeParty
+            - EWMStockUsage
+            - Batch
+            - StockDocumentCategory
+            - StockDocumentNumber
+            - ExternalStockDocumentNumber
+            - StockItemNumber
+            - EWMStockReferenceDocCategory
+            - EWMStockReferenceDocument
+            - EWMStockReferenceDocumentItem
+            - StockIdentificationNumber
+            - WhseQualityInspectionType
+            - QualityInspectionDocument
+            - EWMHghstLvlHandlingUnitNumber
+            - HandlingUnitNumber
+            - EWMStorageBin
+            - EWMStockQuantityInBaseUnit
+            - EWMStockQuantityBaseUnit
+            - EWMStockQtyBaseUnitISOCode
+            - EWMStockQtyBaseUnitSAPCode
+            - EWMStockQuantityAltvUnit
+            - EWMStockQtyAltvUnitISOCode
+            - EWMStockQtyAltvUnitSAPCode
+            - EWMLoadingOrNetWeight
+            - EWMLoadingOrNetWeightUnit
+            - EWMLoadgOrNetWgtUntISOCode
+            - EWMLoadgOrNetWgtUntSAPCode
+            - EWMLoadingOrNetVolume
+            - EWMLoadingOrNetVolumeUnit
+            - EWMLoadgOrNetVolUntISOCode
+            - EWMLoadgOrNetVolUntSAPCode
+            - EWMStorageBinCapConsumptionVal
+            - EWMGoodsReceiptDateTime
+            - WarehouseTimeZone
+            - ShelfLifeExpirationDate
+            - CountryOfOrigin
+            - EWMBatchIsInRestrictedUseStock
+            - InspectionPartialLot
+            - EWMStockIsBlockedForInventory
+            - EWMConsolidationGroup
+            - SerialNumberRequiredLevel
+            - EWMStorBinIsBlockedForPutaway
+            - EWMStorBinIsBlockedForRemoval
+            - EWMStorBinIsBlockedDueToPInv
+            - EWMStorageType
+            - EWMStorageSection
+            - EWMPhysStkMigrtnStsCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _SerialNumber
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of WhsePhysicalStockProducts_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}:
+    parameters:
+    - name: ParentHandlingUnitUUID
+      in: path
+      required: true
+      description: Parent GUID
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: StockItemUUID
+      in: path
+      required: true
+      description: GUID Stock Item
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    get:
+      summary: Get entity from WarehousePhysicalStockProducts by key
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMWarehouse
+            - Product
+            - EWMStockType
+            - EWMStockOwner
+            - EntitledToDisposeParty
+            - EWMStockUsage
+            - Batch
+            - StockDocumentCategory
+            - StockDocumentNumber
+            - ExternalStockDocumentNumber
+            - StockItemNumber
+            - EWMStockReferenceDocCategory
+            - EWMStockReferenceDocument
+            - EWMStockReferenceDocumentItem
+            - StockIdentificationNumber
+            - WhseQualityInspectionType
+            - QualityInspectionDocument
+            - EWMHghstLvlHandlingUnitNumber
+            - HandlingUnitNumber
+            - EWMStorageBin
+            - EWMStockQuantityInBaseUnit
+            - EWMStockQuantityBaseUnit
+            - EWMStockQtyBaseUnitISOCode
+            - EWMStockQtyBaseUnitSAPCode
+            - EWMStockQuantityAltvUnit
+            - EWMStockQtyAltvUnitISOCode
+            - EWMStockQtyAltvUnitSAPCode
+            - EWMLoadingOrNetWeight
+            - EWMLoadingOrNetWeightUnit
+            - EWMLoadgOrNetWgtUntISOCode
+            - EWMLoadgOrNetWgtUntSAPCode
+            - EWMLoadingOrNetVolume
+            - EWMLoadingOrNetVolumeUnit
+            - EWMLoadgOrNetVolUntISOCode
+            - EWMLoadgOrNetVolUntSAPCode
+            - EWMStorageBinCapConsumptionVal
+            - EWMGoodsReceiptDateTime
+            - WarehouseTimeZone
+            - ShelfLifeExpirationDate
+            - CountryOfOrigin
+            - EWMBatchIsInRestrictedUseStock
+            - InspectionPartialLot
+            - EWMStockIsBlockedForInventory
+            - EWMConsolidationGroup
+            - SerialNumberRequiredLevel
+            - EWMStorBinIsBlockedForPutaway
+            - EWMStorBinIsBlockedForRemoval
+            - EWMStorBinIsBlockedDueToPInv
+            - EWMStorageType
+            - EWMStorageSection
+            - EWMPhysStkMigrtnStsCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _SerialNumber
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ConsumeStock:
+    post:
+      summary: Invoke action ConsumeStock
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                WarehouseMovementsReason:
+                  type: string
+                  maxLength: 4
+                WarehouseMovementsText:
+                  type: string
+                  maxLength: 50
+                EWMAccountAssignmentCategory:
+                  type: string
+                  maxLength: 2
+                EWMAccountAssignmentObject:
+                  type: string
+                  maxLength: 35
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseConsumeStkSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ChangeSalesOrderOrProject:
+    post:
+      summary: Invoke action ChangeSalesOrderOrProject
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                StockDocumentCategory:
+                  type: string
+                  maxLength: 3
+                ExternalStockDocumentNumber:
+                  type: string
+                  maxLength: 35
+                StockItemNumber:
+                  type: string
+                  maxLength: 10
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgSlOrOrPrjSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ScrapStock:
+    post:
+      summary: Invoke action ScrapStock
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                WarehouseMovementsReason:
+                  type: string
+                  maxLength: 4
+                WarehouseMovementsText:
+                  type: string
+                  maxLength: 50
+                EWMAccountAssignmentCategory:
+                  type: string
+                  maxLength: 2
+                EWMAccountAssignmentObject:
+                  type: string
+                  maxLength: 35
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseScrapStkSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ChangeDisposalParty:
+    post:
+      summary: Invoke action ChangeDisposalParty
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                EntitledToDisposeParty:
+                  type: string
+                  maxLength: 10
+                Batch:
+                  type: string
+                  maxLength: 10
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgDsplPtySrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ChangeProductOrBatch:
+    post:
+      summary: Invoke action ChangeProductOrBatch
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Product:
+                  type: string
+                  maxLength: 40
+                Batch:
+                  type: string
+                  maxLength: 10
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgProdOrBatSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ChangeStockOwnerAndUsage:
+    post:
+      summary: Invoke action ChangeStockOwnerAndUsage
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                EWMStockOwner:
+                  type: string
+                  maxLength: 10
+                EWMStockUsage:
+                  type: string
+                  maxLength: 1
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkOwAnUsgSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/SAP__self.ChangeStockType:
+    post:
+      summary: Invoke action ChangeStockType
+      tags:
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: ParentHandlingUnitUUID
+        in: path
+        required: true
+        description: Parent GUID
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      - name: StockItemUUID
+        in: path
+        required: true
+        description: GUID Stock Item
+        schema:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+      requestBody:
+        description: Action parameters
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                EWMStockType:
+                  type: string
+                  maxLength: 2
+                EWMGoodsMovementEntryUnit:
+                  type: string
+                  maxLength: 3
+                EWMGoodsMovementEntryQuantity:
+                  anyOf:
+                  - type: number
+                  - type: string
+                  format: decimal
+                  x-sap-precision: 13
+                  x-sap-scale: 3
+                  multipleOf: 0.001
+                  minimum: -9.999999999999E9
+                  maximum: 9.999999999999E9
+                  example: 0
+                _PhysStockProdSerialNumber:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkTypeSrlNmbrP'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WarehousePhysicalStockProducts/{ParentHandlingUnitUUID}/{StockItemUUID}/_SerialNumber:
+    parameters:
+    - name: ParentHandlingUnitUUID
+      in: path
+      required: true
+      description: Parent GUID
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: StockItemUUID
+      in: path
+      required: true
+      description: GUID Stock Item
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    get:
+      summary: Get entities from related _SerialNumber
+      tags:
+      - Warehouse Physical Stock by Product
+      - Whse Phys Stock by Product Serial Nmbr
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - ParentHandlingUnitUUID desc
+            - StockItemUUID
+            - StockItemUUID desc
+            - EWMSerialNumber
+            - EWMSerialNumber desc
+            - EWMWarehouse
+            - EWMWarehouse desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMSerialNumber
+            - EWMWarehouse
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysStock
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of WhsePhysStockProdSerialNmbr_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WhsePhysStockProdSerialNumber:
+    get:
+      summary: Get entities from WhsePhysStockProdSerialNumber
+      tags:
+      - Whse Phys Stock by Product Serial Nmbr
+      parameters:
+      - $ref: '#/components/parameters/top'
+      - $ref: '#/components/parameters/skip'
+      - name: $filter
+        in: query
+        description: Filter items by property values, see [Filtering](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/count'
+      - name: $orderby
+        in: query
+        description: Order items by property values, see [Sorting](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionorderby)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - ParentHandlingUnitUUID desc
+            - StockItemUUID
+            - StockItemUUID desc
+            - EWMSerialNumber
+            - EWMSerialNumber desc
+            - EWMWarehouse
+            - EWMWarehouse desc
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMSerialNumber
+            - EWMWarehouse
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysStock
+      responses:
+        '200':
+          description: Retrieved entities
+          content:
+            application/json:
+              schema:
+                title: Collection of WhsePhysStockProdSerialNmbr_Type
+                type: object
+                properties:
+                  '@odata.count':
+                    $ref: '#/components/schemas/count'
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WhsePhysStockProdSerialNumber/{ParentHandlingUnitUUID}/{StockItemUUID}/{EWMSerialNumber}:
+    parameters:
+    - name: ParentHandlingUnitUUID
+      in: path
+      required: true
+      description: Parent GUID
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: StockItemUUID
+      in: path
+      required: true
+      description: GUID Stock Item
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: EWMSerialNumber
+      in: path
+      required: true
+      description: 30 Characters
+      schema:
+        type: string
+        maxLength: 30
+    get:
+      summary: Get entity from WhsePhysStockProdSerialNumber by key
+      tags:
+      - Whse Phys Stock by Product Serial Nmbr
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMSerialNumber
+            - EWMWarehouse
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _PhysStock
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /WhsePhysStockProdSerialNumber/{ParentHandlingUnitUUID}/{StockItemUUID}/{EWMSerialNumber}/_PhysStock:
+    parameters:
+    - name: ParentHandlingUnitUUID
+      in: path
+      required: true
+      description: Parent GUID
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: StockItemUUID
+      in: path
+      required: true
+      description: GUID Stock Item
+      schema:
+        type: string
+        format: uuid
+        example: 01234567-89ab-cdef-0123-456789abcdef
+    - name: EWMSerialNumber
+      in: path
+      required: true
+      description: 30 Characters
+      schema:
+        type: string
+        maxLength: 30
+    get:
+      summary: Get related _PhysStock
+      tags:
+      - Whse Phys Stock by Product Serial Nmbr
+      - Warehouse Physical Stock by Product
+      parameters:
+      - name: $select
+        in: query
+        description: Select properties to be returned, see [Select](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - ParentHandlingUnitUUID
+            - StockItemUUID
+            - EWMWarehouse
+            - Product
+            - EWMStockType
+            - EWMStockOwner
+            - EntitledToDisposeParty
+            - EWMStockUsage
+            - Batch
+            - StockDocumentCategory
+            - StockDocumentNumber
+            - ExternalStockDocumentNumber
+            - StockItemNumber
+            - EWMStockReferenceDocCategory
+            - EWMStockReferenceDocument
+            - EWMStockReferenceDocumentItem
+            - StockIdentificationNumber
+            - WhseQualityInspectionType
+            - QualityInspectionDocument
+            - EWMHghstLvlHandlingUnitNumber
+            - HandlingUnitNumber
+            - EWMStorageBin
+            - EWMStockQuantityInBaseUnit
+            - EWMStockQuantityBaseUnit
+            - EWMStockQtyBaseUnitISOCode
+            - EWMStockQtyBaseUnitSAPCode
+            - EWMStockQuantityAltvUnit
+            - EWMStockQtyAltvUnitISOCode
+            - EWMStockQtyAltvUnitSAPCode
+            - EWMLoadingOrNetWeight
+            - EWMLoadingOrNetWeightUnit
+            - EWMLoadgOrNetWgtUntISOCode
+            - EWMLoadgOrNetWgtUntSAPCode
+            - EWMLoadingOrNetVolume
+            - EWMLoadingOrNetVolumeUnit
+            - EWMLoadgOrNetVolUntISOCode
+            - EWMLoadgOrNetVolUntSAPCode
+            - EWMStorageBinCapConsumptionVal
+            - EWMGoodsReceiptDateTime
+            - WarehouseTimeZone
+            - ShelfLifeExpirationDate
+            - CountryOfOrigin
+            - EWMBatchIsInRestrictedUseStock
+            - InspectionPartialLot
+            - EWMStockIsBlockedForInventory
+            - EWMConsolidationGroup
+            - SerialNumberRequiredLevel
+            - EWMStorBinIsBlockedForPutaway
+            - EWMStorBinIsBlockedForRemoval
+            - EWMStorBinIsBlockedDueToPInv
+            - EWMStorageType
+            - EWMStorageSection
+            - EWMPhysStkMigrtnStsCode
+            - SAP__Messages
+      - name: $expand
+        in: query
+        description: Expand related entities, see [Expand](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionexpand)
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - '*'
+            - _SerialNumber
+      responses:
+        '200':
+          description: Retrieved entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+        4XX:
+          $ref: '#/components/responses/error'
+  /$batch:
+    post:
+      summary: Send a group of requests
+      description: |-
+        Group multiple requests into a single request payload, see [Batch Requests](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BatchRequests).
+
+        *Please note that "Try it out" is not supported for this request.*
+      tags:
+      - Batch Requests
+      requestBody:
+        required: true
+        description: Batch request
+        content:
+          multipart/mixed;boundary=request-separator:
+            schema:
+              type: string
+            example: |-
+              --request-separator
+              Content-Type: application/http
+              Content-Transfer-Encoding: binary
+
+              GET WarehousePhysicalStockProducts HTTP/1.1
+              Accept: application/json
+
+
+              --request-separator--
+      responses:
+        '200':
+          description: Batch response
+          content:
+            multipart/mixed:
+              schema:
+                type: string
+              example: |-
+                --response-separator
+                Content-Type: application/http
+
+                HTTP/1.1 200 OK
+                Content-Type: application/json
+
+                {...}
+                --response-separator--
+        4XX:
+          $ref: '#/components/responses/error'
+components:
+  schemas:
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type:
+      type: object
+      properties:
+        ParentHandlingUnitUUID:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: Parent
+          description: Parent GUID
+        StockItemUUID:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: GUID Stock
+          description: GUID Stock Item
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: 30 Characters
+        EWMWarehouse:
+          type: string
+          maxLength: 4
+          title: Warehouse Number
+          description: Warehouse Number/Warehouse Complex
+        _PhysStock:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type'
+      title: Whse Phys Stock by Product Serial Nmbr
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type-create:
+      type: object
+      properties:
+        _PhysStock:
+          $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type-create'
+      title: Whse Phys Stock by Product Serial Nmbr (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type-update:
+      type: object
+      title: Whse Phys Stock by Product Serial Nmbr (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type:
+      type: object
+      properties:
+        ParentHandlingUnitUUID:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: Parent
+          description: Parent GUID
+        StockItemUUID:
+          type: string
+          format: uuid
+          example: 01234567-89ab-cdef-0123-456789abcdef
+          title: GUID Stock
+          description: GUID Stock Item
+        EWMWarehouse:
+          type: string
+          maxLength: 4
+          x-sap-object-node-type-reference: Warehouse
+          title: Warehouse Number
+          description: Warehouse Number/Warehouse Complex
+        Product:
+          type: string
+          maxLength: 40
+          title: Product
+          description: Product Number
+        EWMStockType:
+          type: string
+          maxLength: 2
+          title: Stock Type
+        EWMStockOwner:
+          type: string
+          maxLength: 10
+          title: Stock Owner
+        EntitledToDisposeParty:
+          type: string
+          maxLength: 10
+          title: Disposal Party
+          description: Party Entitled to Dispose
+        EWMStockUsage:
+          type: string
+          maxLength: 1
+          title: Usage
+          description: Stock Usage
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        StockDocumentCategory:
+          type: string
+          maxLength: 3
+          title: Special Reference Stock Type
+        StockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Sales Order/Project
+        ExternalStockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Stock Reference Doc.
+          description: Reference Document for Special Reference Stock
+        StockItemNumber:
+          type: string
+          maxLength: 10
+          title: Sales Order Item
+          description: Sales Order Item for Sales Order Stock
+        EWMStockReferenceDocCategory:
+          type: string
+          maxLength: 3
+          title: Reference Document Category
+        EWMStockReferenceDocument:
+          type: string
+          maxLength: 35
+          title: Reference Document
+        EWMStockReferenceDocumentItem:
+          type: string
+          maxLength: 10
+          title: Reference Document Item
+        StockIdentificationNumber:
+          type: string
+          maxLength: 20
+          title: Stock ID
+          description: Identification Number of Stock
+        WhseQualityInspectionType:
+          type: string
+          maxLength: 1
+          title: Quality Inspection Type
+        QualityInspectionDocument:
+          type: string
+          maxLength: 35
+          title: Quality Inspection
+          description: Inspection Lot or Inspection Document Number
+        EWMHghstLvlHandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Highest-Level Handling Unit
+        HandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Handling Unit
+        EWMStorageBin:
+          type: string
+          maxLength: 18
+          title: Storage Bin
+        EWMStockQuantityInBaseUnit:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 31
+          x-sap-scale: 14
+          multipleOf: 1.0E-14
+          example: 0
+          title: Quantity in Base Unit
+          description: Quantity in Base Unit of Measure
+        EWMStockQuantityBaseUnit:
+          type: string
+          maxLength: 3
+          title: Base Unit of Measure
+        EWMStockQtyBaseUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyBaseUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStockQuantityAltvUnit:
+          type: string
+          maxLength: 3
+          title: Alternative Unit of Measure
+        EWMStockQtyAltvUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyAltvUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetWeight:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Weight
+          description: Loading or Net Weight
+        EWMLoadingOrNetWeightUnit:
+          type: string
+          maxLength: 3
+          title: Weight Unit
+        EWMLoadgOrNetWgtUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetWgtUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetVolume:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Volume
+          description: Loading or Net Volume
+        EWMLoadingOrNetVolumeUnit:
+          type: string
+          maxLength: 3
+          title: Volume Unit
+        EWMLoadgOrNetVolUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetVolUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStorageBinCapConsumptionVal:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Capacity Consumption
+        EWMGoodsReceiptDateTime:
+          type: string
+          nullable: true
+          format: date-time
+          example: '2017-04-13T15:51:04Z'
+          title: Goods Receipt Date
+        WarehouseTimeZone:
+          type: string
+          maxLength: 6
+          title: Time Zone
+        ShelfLifeExpirationDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Expiration Date
+          description: Shelf Life Expiration Date
+        CountryOfOrigin:
+          type: string
+          maxLength: 3
+          title: Country / Region of Origin
+        EWMBatchIsInRestrictedUseStock:
+          type: boolean
+          title: Batch in Restricted Use
+        InspectionPartialLot:
+          type: string
+          maxLength: 6
+          title: Partial Inspection Lot
+        EWMStockIsBlockedForInventory:
+          type: boolean
+          title: Stock Is Blocked by PI
+          description: Stock Is Blocked by Physical Inventory
+        EWMConsolidationGroup:
+          type: string
+          maxLength: 10
+          title: Consolidation Group
+        SerialNumberRequiredLevel:
+          type: string
+          maxLength: 1
+          title: Serial Number Requirement
+        EWMStorBinIsBlockedForPutaway:
+          type: boolean
+          title: Storage Bin Is Blocked for Putaway
+        EWMStorBinIsBlockedForRemoval:
+          type: boolean
+          title: Storage Bin Is Blocked for Removal
+        EWMStorBinIsBlockedDueToPInv:
+          type: boolean
+          title: Storage Bin Is Blocked by PI
+          description: Storage Bin Is Blocked by Physical Inventory
+        EWMStorageType:
+          type: string
+          maxLength: 4
+          title: Storage Type
+        EWMStorageSection:
+          type: string
+          maxLength: 4
+          title: Storage Section
+        EWMPhysStkMigrtnStsCode:
+          type: string
+          maxLength: 1
+          title: migration status
+          description: Status of a silent data migration
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message'
+        _SerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type'
+      title: Warehouse Physical Stock by Product
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type-create:
+      type: object
+      properties:
+        EWMWarehouse:
+          type: string
+          maxLength: 4
+          x-sap-object-node-type-reference: Warehouse
+          title: Warehouse Number
+          description: Warehouse Number/Warehouse Complex
+        Product:
+          type: string
+          maxLength: 40
+          title: Product
+          description: Product Number
+        EWMStockType:
+          type: string
+          maxLength: 2
+          title: Stock Type
+        EWMStockOwner:
+          type: string
+          maxLength: 10
+          title: Stock Owner
+        EntitledToDisposeParty:
+          type: string
+          maxLength: 10
+          title: Disposal Party
+          description: Party Entitled to Dispose
+        EWMStockUsage:
+          type: string
+          maxLength: 1
+          title: Usage
+          description: Stock Usage
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        StockDocumentCategory:
+          type: string
+          maxLength: 3
+          title: Special Reference Stock Type
+        StockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Sales Order/Project
+        ExternalStockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Stock Reference Doc.
+          description: Reference Document for Special Reference Stock
+        StockItemNumber:
+          type: string
+          maxLength: 10
+          title: Sales Order Item
+          description: Sales Order Item for Sales Order Stock
+        EWMStockReferenceDocCategory:
+          type: string
+          maxLength: 3
+          title: Reference Document Category
+        EWMStockReferenceDocument:
+          type: string
+          maxLength: 35
+          title: Reference Document
+        EWMStockReferenceDocumentItem:
+          type: string
+          maxLength: 10
+          title: Reference Document Item
+        StockIdentificationNumber:
+          type: string
+          maxLength: 20
+          title: Stock ID
+          description: Identification Number of Stock
+        WhseQualityInspectionType:
+          type: string
+          maxLength: 1
+          title: Quality Inspection Type
+        QualityInspectionDocument:
+          type: string
+          maxLength: 35
+          title: Quality Inspection
+          description: Inspection Lot or Inspection Document Number
+        EWMHghstLvlHandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Highest-Level Handling Unit
+        HandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Handling Unit
+        EWMStorageBin:
+          type: string
+          maxLength: 18
+          title: Storage Bin
+        EWMStockQuantityInBaseUnit:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 31
+          x-sap-scale: 14
+          multipleOf: 1.0E-14
+          example: 0
+          title: Quantity in Base Unit
+          description: Quantity in Base Unit of Measure
+        EWMStockQuantityBaseUnit:
+          type: string
+          maxLength: 3
+          title: Base Unit of Measure
+        EWMStockQtyBaseUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyBaseUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStockQuantityAltvUnit:
+          type: string
+          maxLength: 3
+          title: Alternative Unit of Measure
+        EWMStockQtyAltvUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyAltvUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetWeight:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Weight
+          description: Loading or Net Weight
+        EWMLoadingOrNetWeightUnit:
+          type: string
+          maxLength: 3
+          title: Weight Unit
+        EWMLoadgOrNetWgtUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetWgtUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetVolume:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Volume
+          description: Loading or Net Volume
+        EWMLoadingOrNetVolumeUnit:
+          type: string
+          maxLength: 3
+          title: Volume Unit
+        EWMLoadgOrNetVolUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetVolUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStorageBinCapConsumptionVal:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Capacity Consumption
+        EWMGoodsReceiptDateTime:
+          type: string
+          nullable: true
+          format: date-time
+          example: '2017-04-13T15:51:04Z'
+          title: Goods Receipt Date
+        WarehouseTimeZone:
+          type: string
+          maxLength: 6
+          title: Time Zone
+        ShelfLifeExpirationDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Expiration Date
+          description: Shelf Life Expiration Date
+        CountryOfOrigin:
+          type: string
+          maxLength: 3
+          title: Country / Region of Origin
+        EWMBatchIsInRestrictedUseStock:
+          type: boolean
+          title: Batch in Restricted Use
+        InspectionPartialLot:
+          type: string
+          maxLength: 6
+          title: Partial Inspection Lot
+        EWMStockIsBlockedForInventory:
+          type: boolean
+          title: Stock Is Blocked by PI
+          description: Stock Is Blocked by Physical Inventory
+        EWMConsolidationGroup:
+          type: string
+          maxLength: 10
+          title: Consolidation Group
+        SerialNumberRequiredLevel:
+          type: string
+          maxLength: 1
+          title: Serial Number Requirement
+        EWMStorBinIsBlockedForPutaway:
+          type: boolean
+          title: Storage Bin Is Blocked for Putaway
+        EWMStorBinIsBlockedForRemoval:
+          type: boolean
+          title: Storage Bin Is Blocked for Removal
+        EWMStorBinIsBlockedDueToPInv:
+          type: boolean
+          title: Storage Bin Is Blocked by PI
+          description: Storage Bin Is Blocked by Physical Inventory
+        EWMStorageType:
+          type: string
+          maxLength: 4
+          title: Storage Type
+        EWMStorageSection:
+          type: string
+          maxLength: 4
+          title: Storage Section
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message-create'
+        _SerialNumber:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysStockProdSerialNmbr_Type-create'
+      title: Warehouse Physical Stock by Product (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.WhsePhysicalStockProducts_Type-update:
+      type: object
+      properties:
+        EWMWarehouse:
+          type: string
+          maxLength: 4
+          x-sap-object-node-type-reference: Warehouse
+          title: Warehouse Number
+          description: Warehouse Number/Warehouse Complex
+        Product:
+          type: string
+          maxLength: 40
+          title: Product
+          description: Product Number
+        EWMStockType:
+          type: string
+          maxLength: 2
+          title: Stock Type
+        EWMStockOwner:
+          type: string
+          maxLength: 10
+          title: Stock Owner
+        EntitledToDisposeParty:
+          type: string
+          maxLength: 10
+          title: Disposal Party
+          description: Party Entitled to Dispose
+        EWMStockUsage:
+          type: string
+          maxLength: 1
+          title: Usage
+          description: Stock Usage
+        Batch:
+          type: string
+          maxLength: 10
+          title: Batch
+          description: Batch Number
+        StockDocumentCategory:
+          type: string
+          maxLength: 3
+          title: Special Reference Stock Type
+        StockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Sales Order/Project
+        ExternalStockDocumentNumber:
+          type: string
+          maxLength: 35
+          title: Stock Reference Doc.
+          description: Reference Document for Special Reference Stock
+        StockItemNumber:
+          type: string
+          maxLength: 10
+          title: Sales Order Item
+          description: Sales Order Item for Sales Order Stock
+        EWMStockReferenceDocCategory:
+          type: string
+          maxLength: 3
+          title: Reference Document Category
+        EWMStockReferenceDocument:
+          type: string
+          maxLength: 35
+          title: Reference Document
+        EWMStockReferenceDocumentItem:
+          type: string
+          maxLength: 10
+          title: Reference Document Item
+        StockIdentificationNumber:
+          type: string
+          maxLength: 20
+          title: Stock ID
+          description: Identification Number of Stock
+        WhseQualityInspectionType:
+          type: string
+          maxLength: 1
+          title: Quality Inspection Type
+        QualityInspectionDocument:
+          type: string
+          maxLength: 35
+          title: Quality Inspection
+          description: Inspection Lot or Inspection Document Number
+        EWMHghstLvlHandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Highest-Level Handling Unit
+        HandlingUnitNumber:
+          type: string
+          maxLength: 20
+          title: Handling Unit
+        EWMStorageBin:
+          type: string
+          maxLength: 18
+          title: Storage Bin
+        EWMStockQuantityInBaseUnit:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 31
+          x-sap-scale: 14
+          multipleOf: 1.0E-14
+          example: 0
+          title: Quantity in Base Unit
+          description: Quantity in Base Unit of Measure
+        EWMStockQuantityBaseUnit:
+          type: string
+          maxLength: 3
+          title: Base Unit of Measure
+        EWMStockQtyBaseUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyBaseUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStockQuantityAltvUnit:
+          type: string
+          maxLength: 3
+          title: Alternative Unit of Measure
+        EWMStockQtyAltvUnitISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMStockQtyAltvUnitSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetWeight:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Weight
+          description: Loading or Net Weight
+        EWMLoadingOrNetWeightUnit:
+          type: string
+          maxLength: 3
+          title: Weight Unit
+        EWMLoadgOrNetWgtUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetWgtUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMLoadingOrNetVolume:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Loading Volume
+          description: Loading or Net Volume
+        EWMLoadingOrNetVolumeUnit:
+          type: string
+          maxLength: 3
+          title: Volume Unit
+        EWMLoadgOrNetVolUntISOCode:
+          type: string
+          maxLength: 3
+          title: ISO Code
+          description: ISO Code for Unit of Measurement
+        EWMLoadgOrNetVolUntSAPCode:
+          type: string
+          maxLength: 3
+          title: Internal SAP Code
+          description: Unit of Measurement, Internal SAP Code (No Conversion)
+        EWMStorageBinCapConsumptionVal:
+          anyOf:
+          - type: number
+          - type: string
+          format: decimal
+          x-sap-precision: 15
+          x-sap-scale: 3
+          multipleOf: 0.001
+          minimum: -9.99999999999999E11
+          maximum: 9.99999999999999E11
+          example: 0
+          title: Capacity Consumption
+        EWMGoodsReceiptDateTime:
+          type: string
+          nullable: true
+          format: date-time
+          example: '2017-04-13T15:51:04Z'
+          title: Goods Receipt Date
+        WarehouseTimeZone:
+          type: string
+          maxLength: 6
+          title: Time Zone
+        ShelfLifeExpirationDate:
+          type: string
+          nullable: true
+          format: date
+          example: '2017-04-13'
+          title: Expiration Date
+          description: Shelf Life Expiration Date
+        CountryOfOrigin:
+          type: string
+          maxLength: 3
+          title: Country / Region of Origin
+        EWMBatchIsInRestrictedUseStock:
+          type: boolean
+          title: Batch in Restricted Use
+        InspectionPartialLot:
+          type: string
+          maxLength: 6
+          title: Partial Inspection Lot
+        EWMStockIsBlockedForInventory:
+          type: boolean
+          title: Stock Is Blocked by PI
+          description: Stock Is Blocked by Physical Inventory
+        EWMConsolidationGroup:
+          type: string
+          maxLength: 10
+          title: Consolidation Group
+        SerialNumberRequiredLevel:
+          type: string
+          maxLength: 1
+          title: Serial Number Requirement
+        EWMStorBinIsBlockedForPutaway:
+          type: boolean
+          title: Storage Bin Is Blocked for Putaway
+        EWMStorBinIsBlockedForRemoval:
+          type: boolean
+          title: Storage Bin Is Blocked for Removal
+        EWMStorBinIsBlockedDueToPInv:
+          type: boolean
+          title: Storage Bin Is Blocked by PI
+          description: Storage Bin Is Blocked by Physical Inventory
+        EWMStorageType:
+          type: string
+          maxLength: 4
+          title: Storage Type
+        EWMStorageSection:
+          type: string
+          maxLength: 4
+          title: Storage Section
+        SAP__Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message-update'
+      title: Warehouse Physical Stock by Product (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseScrapStkSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseScrapStkSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseScrapStkSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseScrapStkSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseScrapStkSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseScrapStkSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseConsumeStkSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseConsumeStkSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseConsumeStkSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseConsumeStkSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseConsumeStkSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseConsumeStkSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkTypeSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkTypeSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkTypeSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkTypeSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkTypeSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkTypeSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgProdOrBatSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgProdOrBatSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgProdOrBatSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgProdOrBatSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgProdOrBatSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgProdOrBatSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkOwAnUsgSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkOwAnUsgSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkOwAnUsgSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkOwAnUsgSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgStkOwAnUsgSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgStkOwAnUsgSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgDsplPtySrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgDsplPtySrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgDsplPtySrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgDsplPtySrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgDsplPtySrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgDsplPtySrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgSlOrOrPrjSrlNmbrP:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgSlOrOrPrjSrlNmbrP
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgSlOrOrPrjSrlNmbrP-create:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgSlOrOrPrjSrlNmbrP (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.D_WhseChgSlOrOrPrjSrlNmbrP-update:
+      type: object
+      properties:
+        EWMSerialNumber:
+          type: string
+          maxLength: 30
+          title: Serial Number
+      title: D_WhseChgSlOrOrPrjSrlNmbrP (for update)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message-create:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message (for create)
+    com.sap.gateway.srvd_a2x.api_whse_physstockprod.v0001.SAP__Message-update:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        additionalTargets:
+          type: array
+          items:
+            type: string
+        transition:
+          type: boolean
+        numericSeverity:
+          type: integer
+          format: uint8
+        longtextUrl:
+          type: string
+          nullable: true
+      title: SAP__Message (for update)
+    count:
+      anyOf:
+      - type: number
+      - type: string
+      description: The number of entities in the collection. Available when using the [$count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount) query option.
+    error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            target:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+                required:
+                - code
+                - message
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  target:
+                    type: string
+            innererror:
+              type: object
+              description: The structure of this object is service-specific
+  parameters:
+    top:
+      name: $top
+      in: query
+      description: Show only the first n items, see [Paging - Top](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptiontop)
+      schema:
+        type: integer
+        minimum: 0
+      example: 50
+    skip:
+      name: $skip
+      in: query
+      description: Skip the first n items, see [Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionskip)
+      schema:
+        type: integer
+        minimum: 0
+    count:
+      name: $count
+      in: query
+      description: Include count of items, see [Count](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptioncount)
+      schema:
+        type: boolean
+    search:
+      name: $search
+      in: query
+      description: Search items by search phrases, see [Searching](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionsearch)
+      schema:
+        type: string
+  responses:
+    error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+  securitySchemes:
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          scopes:
+            OV4:API_WHSE_PHYSSTOCKPROD: ''
+          refreshUrl: https://{host}:{port}
+          authorizationUrl: https://{host}:{port}
+          tokenUrl: https://{host}:{port}
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+- OAuth2Auth:
+  - OV4:API_WHSE_PHYSSTOCKPROD
+- BasicAuth: []
