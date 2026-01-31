@@ -1,6 +1,5 @@
 # Environment variables
 .env
-.env.*
 *.env
 
 # Python-generated files
