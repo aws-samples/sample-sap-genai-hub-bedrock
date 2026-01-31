@@ -1,3 +1,8 @@
+# Environment variables
+.env
+.env.*
+*.env
+
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -12,3 +17,24 @@ wheels/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Log files
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Amazon Bedrock AgentCore intermediate files
+Dockerfile
+.dockerignore
+.bedrock_agentcore.yaml
+requirements.txt
+warehouse_agent_agentcore.py
+
+# SAP AI Core configuration files
+config.json
+aicore-config.json
+*-config.json
+.aicore/
