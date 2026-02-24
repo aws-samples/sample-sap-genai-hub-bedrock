@@ -18,4 +18,5 @@ dependencies = [
     "streamlit>=1.46.1",
     "uvicorn>=0.34.3",
     "tavily-python",
+    "bedrock-agentcore-starter-toolkit>=0.1.9",
 ]
