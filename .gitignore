@@ -37,3 +37,6 @@ config.json
 aicore-config.json
 *-config.json
 .aicore/
+
+# Joule integration values (contains Cognito client secret) - written by Lab 8 Step 12
+joule_integration_config.json
