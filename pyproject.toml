@@ -11,7 +11,7 @@ dependencies = [
     "sap-ai-sdk-gen[all]>=5.5.0",
     "ipykernel>=6.29.5",
     "langchain==0.3.25",
-    "langgraph==0.3.25",
+    "langgraph==1.0.10rc1",
     "strands-agents==1.5.0",
     "strands-agents-builder==0.1.8",
     "strands-agents-tools==0.2.0",
