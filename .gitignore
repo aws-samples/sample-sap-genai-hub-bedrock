@@ -37,3 +37,10 @@ config.json
 aicore-config.json
 *-config.json
 .aicore/
+
+# Evaluation output
+evaluation_report.json
+
+# Claude Code
+CLAUDE.md
+.claude/
