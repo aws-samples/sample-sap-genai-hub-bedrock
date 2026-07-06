@@ -19,6 +19,6 @@ dependencies = [
     "uvicorn>=0.34.3",
     "tavily-python",
     "bedrock-agentcore>=1.11.0",
-    "bedrock-agentcore-starter-toolkit>=0.1.9",
+    "bedrock-agentcore-starter-toolkit==0.1.14",
     "strands-agents-evals>=0.2.0",
 ]
