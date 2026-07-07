@@ -9,11 +9,13 @@ import logging
 import os
 from typing import (
     Any,
+    AsyncGenerator,
     Dict,
     Iterable,
     List,
     Literal,
     Optional,
+    Union,
     cast,
     TypeVar,
     Type,
@@ -22,6 +24,9 @@ from typing import (
 
 from pydantic import BaseModel
 from typing_extensions import TypedDict, Unpack, override
+
+# Bound to Pydantic models — the schema types passed to structured_output.
+T = TypeVar("T", bound=BaseModel)
 
 from strands.types.content import ContentBlock, Messages
 from strands.types.exceptions import (
@@ -690,71 +695,63 @@ class SAPGenAIHubModel(Model):
             # Otherwise raise the error
             raise e
 
-    def structured_output(self, schema_type: Type, **kwargs: Any) -> Any:
-        """Generate a structured output based on the provided schema.
+    @override
+    async def structured_output(
+        self,
+        output_model: Type[T],
+        prompt: Messages,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any,
+    ) -> AsyncGenerator[Dict[str, Union[T, Any]], None]:
+        """Get structured output from the model.
+
+        Implements the Strands `Model.structured_output` contract: an async generator
+        that streams model events and yields a final ``{"output": <instance>}`` event.
+        This mirrors ``BedrockModel.structured_output`` so evaluators and agents that
+        call ``agent(prompt, structured_output_model=...)`` work through the SAP GenAI
+        Hub proxy.
 
         Args:
-            schema_type: The Pydantic model class that defines the output schema.
-            **kwargs: Additional arguments to pass to the model.
+            output_model: The Pydantic model class that defines the output schema.
+            prompt: The prompt messages to send to the model.
+            system_prompt: Optional system prompt for additional context.
+            **kwargs: Additional keyword arguments for future extensibility.
 
-        Returns:
-            An instance of the provided schema_type.
+        Yields:
+            Model events, with the last being ``{"output": output_model instance}``.
+
+        Raises:
+            ValueError: If the model does not return a valid tool use for the schema.
         """
-        from strands.event_loop.streaming import process_stream
-        from strands.handlers.callback_handler import PrintingCallbackHandler
+        from strands.event_loop import streaming
         from strands.tools import convert_pydantic_to_tool_spec
 
-        # Create a tool spec from the schema
-        tool_spec = convert_pydantic_to_tool_spec(schema_type)
+        # Represent the schema as a tool the model is asked to call.
+        tool_spec = convert_pydantic_to_tool_spec(output_model)
 
-        # Create a system prompt that instructs the model to generate a structured output
-        system_prompt = f"""You are a helpful assistant that generates structured data according to a specific schema.
-        
-        The user will provide you with a request, and you must respond with a valid instance of the following schema:
-        
-        {schema_type.schema_json(indent=2)}
-        
-        Your response should be a valid JSON object that conforms to this schema.
-        """
-
-        # Create a message with the user's request
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "text": f"Generate a structured output according to the provided schema based on this request: {kwargs.get('prompt', '')}"
-                    }
-                ],
-            }
-        ]
-
-        # Format the request
-        request = self.format_request(
-            messages=messages,
-            tool_specs=[tool_spec],
-            system_prompt=system_prompt,
+        response = self.stream(
+            messages=prompt, tool_specs=[tool_spec], system_prompt=system_prompt
         )
+        async for event in streaming.process_stream(response):
+            yield event
 
-        # Stream the response
-        chunks = self.stream(request)
+        stop_reason, messages, _, _ = event["stop"]
 
-        # Process the stream to extract the structured output
-        result = None
-        for event in process_stream(chunks, messages):
-            if "callback" in event and "delta" in event["callback"]:
-                delta = event["callback"]["delta"]
-                if "toolUse" in delta and "input" in delta["toolUse"]:
-                    # Parse the tool use input as JSON
-                    try:
-                        input_json = json.loads(delta["toolUse"]["input"])
-                        # Create an instance of the schema type from the JSON
-                        result = schema_type(**input_json)
-                    except Exception as e:
-                        logger.error(f"Error parsing structured output: {e}")
-                        raise ValueError(f"Failed to parse structured output: {e}")
+        if stop_reason != "tool_use":
+            raise ValueError(
+                f'Model returned stop_reason: {stop_reason} instead of "tool_use".'
+            )
 
-        if result is None:
-            raise ValueError("Failed to generate structured output")
+        content = messages["content"]
+        output_response: Optional[Dict[str, Any]] = None
+        for block in content:
+            # Match the tool use whose name is our schema tool; skip anything else.
+            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+                output_response = block["toolUse"]["input"]
 
-        return result
+        if output_response is None:
+            raise ValueError(
+                "No valid tool use or tool use input was found in the SAP GenAI Hub response."
+            )
+
+        yield {"output": output_model(**output_response)}
