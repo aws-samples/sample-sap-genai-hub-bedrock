@@ -29,6 +29,7 @@ Thumbs.db
 Dockerfile
 .dockerignore
 .bedrock_agentcore.yaml
+lab7_deployment.json
 requirements.txt
 warehouse_agent_agentcore.py
 
