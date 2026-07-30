@@ -1,6 +1,6 @@
 # util/deployed_eval.py
 """Pure helpers for Lab 09 Stage 2 (deployed evaluation): cost math, timing
-summaries, and the before->after payoff table. No I/O, no AWS calls — the
+summaries, and the before->after payoff table. No I/O, no AWS calls: the
 notebook orchestrates; these are the testable pieces."""
 
 from __future__ import annotations

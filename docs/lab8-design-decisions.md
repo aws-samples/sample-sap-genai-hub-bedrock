@@ -98,9 +98,45 @@ Available types: On-demand (per-session), On-demand Dataset Runner, Batch, Onlin
 
 **Decision**: On-demand per-session via `EvaluationClient.run()`. Most self-contained for a notebook demo — no additional infrastructure (no IAM role for online eval, no batch job management).
 
+### The improved agent: deep tool + router, not a prompt tweak (Lab 9 Stage 1)
+
+**Decision**: The Stage-1 fix is an **architectural** change, not a prompt patch. Earlier iterations
+"fixed" the inefficient baseline with `WAREHOUSE_SYSTEM_PROMPT_IMPROVED` — the baseline prompt plus a
+KNOWN SCHEMA block telling the agent to skip the selector/`$metadata`. That worked but was brittle
+(static facts living in prose, obedience left to the model). The trajectory judge's own diagnosis
+pointed past the prompt: the three wasteful patterns it flags — selector round-trip, repeated
+`$metadata` rediscovery, trial-and-error `$filter` — are all things the agent rediscovers **at
+runtime** that are **fixed at design time**.
+
+So the improved agent (`build_improved_warehouse_agent` in [util/warehouse_agent.py](../util/warehouse_agent.py))
+is a **deep tool + router**:
+
+- `get_warehouse_stock(product, low_stock_only)` — a purpose-built `@tool` that encodes the service
+  root, entity set (`WarehousePhysicalStockProducts`), field names, warehouse ID (`WAREHOUSE_ID`),
+  and server-side `$filter`/`$select`/`$orderby` **in code**. It reuses `odata_caller.__wrapped__`
+  internally so auth/formatting stay DRY. A stock question is answered in **one** call, correct by
+  construction — no selector, no `$metadata`, no failed filters.
+- The selector sub-agent + generic `odata_caller` stay wired in as a **fallback**, so the router
+  keeps dynamic discovery for genuinely off-path questions. (Chosen over deep-tool-only: the Lab 6/7
+  selector was the right call for open-ended exploration; it just shouldn't sit on the benchmarked
+  hot path.)
+
+Finding→fix mapping: selector round-trip → no selector on stock path; `$metadata` rediscovery →
+fields compiled into `$select`; `$filter` guessing → filter built in Python. The before→after story
+is thus `odata_caller` × N → `get_warehouse_stock` × 1, a stronger eval signal than the prompt tweak.
+
+Notebook wiring: `evaluate_agent` takes a `tool_name` (`odata_caller` for baseline,
+`get_warehouse_stock` for improved) so ToolCalled, `n_tool_calls`, and the expected trajectory
+target the right primary tool for each architecture.
+
 ### Stage 2 redeploy-then-verify (Lab 9)
 
-**Decision**: Stage 2 (Lab 9) owns its memory resource and redeploys the Stage-1 improved prompt in-place (memory-enabled), then grades the improved runtime for parity + prod-only latency/cost; the before→after is cross-stage (Stage-1 local naive → Stage-2 prod improved), no separate prod baseline round.
+**Decision**: Stage 2 (Lab 9) redeploys the Stage-1 improved agent (deep-tool architecture, via
+`build_improved_warehouse_agent`) in-place to the Lab 7 runtime, then grades the improved runtime for
+parity + prod-only latency/cost; the before→after is cross-stage (Stage-1 local naive → Stage-2 prod
+improved), no separate prod baseline round. The redeployed agent runs **without memory**: Lab 9
+grades query logic and efficiency, not personalization, so Lab 8 (memory) and Lab 9 (evaluation) stay
+independent standalone labs and the runtime stays lean.
 
 ---
 
