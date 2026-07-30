@@ -98,6 +98,10 @@ Available types: On-demand (per-session), On-demand Dataset Runner, Batch, Onlin
 
 **Decision**: On-demand per-session via `EvaluationClient.run()`. Most self-contained for a notebook demo — no additional infrastructure (no IAM role for online eval, no batch job management).
 
+### Stage 2 redeploy-then-verify (Lab 9)
+
+**Decision**: Stage 2 (Lab 9) owns its memory resource and redeploys the Stage-1 improved prompt in-place (memory-enabled), then grades the improved runtime for parity + prod-only latency/cost; the before→after is cross-stage (Stage-1 local naive → Stage-2 prod improved), no separate prod baseline round.
+
 ---
 
 ## Notebook Structure
