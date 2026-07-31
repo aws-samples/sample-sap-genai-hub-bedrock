@@ -43,17 +43,23 @@ if __name__ == "__main__":
     app.run()
 '''
 
-# Container dependencies. Kept in sync with Lab 07 so Lab 09 can redeploy standalone.
+# Container dependencies. Versions are pinned to mirror pyproject.toml, NOT loosened, so the
+# deployed runtime resolves the same stack the notebook was validated against. In particular
+# sap-ai-sdk-gen is pinned >=6.10.0: the 5.x line caps botocore below the floor that a modern
+# bedrock-agentcore needs (see the pyproject.toml comment), so an unbounded >=5.5.0 here would
+# let the container resolve the exact combination pyproject was written to avoid. The starter
+# toolkit auto-adds aws-opentelemetry-distro and the opentelemetry-instrument entrypoint when
+# observability is enabled (the default), so OTEL spans — which Stage 2 grades — need no line here.
 REQUIREMENTS = """\
-# AgentCore requirements
-strands-agents
-strands-agents-tools
+# AgentCore requirements (pins mirror pyproject.toml)
+strands-agents==1.14.0
+strands-agents-tools==0.2.0
 uv
-boto3
-bedrock-agentcore<=0.1.5
+boto3>=1.37.0
+bedrock-agentcore>=1.6.0
 bedrock-agentcore-starter-toolkit==0.1.14
 # SAP GenAI Hub and warehouse agent dependencies
-sap-ai-sdk-gen[all]>=5.5.0
+sap-ai-sdk-gen[all]>=6.10.0
 pyyaml
 requests
 python-dotenv

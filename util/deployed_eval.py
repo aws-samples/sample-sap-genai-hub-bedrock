@@ -1,27 +1,10 @@
 # util/deployed_eval.py
-"""Pure helpers for Lab 09 Stage 2 (deployed evaluation): cost math, timing
-summaries, and the before->after payoff table. No I/O, no AWS calls: the
-notebook orchestrates; these are the testable pieces."""
+"""Pure helpers for Lab 09 Stage 2 (deployed evaluation): timing summaries and
+the scorecard table. No I/O, no AWS calls: the notebook orchestrates; these are
+the testable pieces."""
 
 from __future__ import annotations
 from statistics import mean, median
-
-# TODO: Customize these to your models/region. USD per 1,000 tokens.
-DEFAULT_RATES: dict[str, dict] = {
-    "anthropic--claude-4.5-sonnet": {"input": 0.003, "output": 0.015},
-    "amazon--nova-pro": {"input": 0.0008, "output": 0.0032},
-    "amazon--nova-lite": {"input": 0.00006, "output": 0.00024},
-}
-
-
-def tokens_to_cost(input_tokens, output_tokens, model_id, rate_table=DEFAULT_RATES):
-    """USD cost for one task, or None if data/model rate is missing."""
-    if input_tokens is None or output_tokens is None:
-        return None
-    rate = rate_table.get(model_id)
-    if not rate:
-        return None
-    return (input_tokens / 1000.0) * rate["input"] + (output_tokens / 1000.0) * rate["output"]
 
 
 def summarize_timing(items):
