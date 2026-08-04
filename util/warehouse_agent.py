@@ -35,6 +35,8 @@ the finding-by-finding mapping. This is the agent Stage 1 grades as the fix and 
 redeploys to the Lab 7 runtime.
 """
 
+import json
+from collections import defaultdict
 from pathlib import Path
 
 import yaml
@@ -66,6 +68,12 @@ WAREHOUSE_ID = "1750"
 
 # TODO: Adjust capacity for your warehouse (used in evaluation scenarios and low-stock judgement).
 WAREHOUSE_CAPACITY = 500
+
+# An item counts as "low on stock" when its PER-PRODUCT total on-hand quantity is below this
+# fraction of nominal capacity. 0.2 * 500 = 100 units. Encoded here (not left to the model) so
+# the low-stock answer is a deterministic threshold applied to aggregated totals, not a vibe.
+LOW_STOCK_THRESHOLD_RATIO = 0.2
+LOW_STOCK_THRESHOLD = int(WAREHOUSE_CAPACITY * LOW_STOCK_THRESHOLD_RATIO)
 
 
 # --- Selector sub-agent prompt (from Lab 06) -------------------------------------------
@@ -208,6 +216,83 @@ def build_warehouse_agent(model, system_prompt=WAREHOUSE_SYSTEM_PROMPT,
 # The selector + odata_caller stay wired in as a *fallback*, so the improved agent is a router:
 # deep tool for the hot path, dynamic discovery for everything else.
 
+# The entity returns one row per storage BIN, so a single product's stock is spread across many
+# rows. Answering "what is low on stock?" therefore requires aggregating bin rows to per-product
+# totals BEFORE comparing to capacity — otherwise a product with 1,772 units across four bins
+# looks "critically low" because one of its bins holds two units. OData v4 $apply/groupby would do
+# this server-side, but this SAP sandbox entity rejects it (400), so we sum in Python. All 188
+# warehouse rows come back in one page ($top=1000), so the aggregation stays a single round-trip.
+_STOCK_ROW_PAGE_SIZE = 1000
+_QTY_FIELD = "EWMStockQuantityInBaseUnit"
+_UNIT_FIELD = "EWMStockQuantityBaseUnit"
+
+
+def _extract_rows(odata_result: dict) -> list:
+    """Pull the OData ``value`` list back out of _odata_call's formatted text blob.
+
+    _odata_call returns a human-readable string with the raw JSON appended after a
+    ``📄 Response:`` marker. For low-stock aggregation we need the structured rows, so we slice
+    that JSON back out and parse it. Returns [] if the shape is anything other than success.
+    """
+    if odata_result.get("status") != "success":
+        return []
+    text = odata_result.get("content", [{}])[0].get("text", "")
+    marker = "📄 Response:"
+    idx = text.find(marker)
+    if idx == -1:
+        return []
+    try:
+        payload = json.loads(text[idx + len(marker):])
+    except json.JSONDecodeError:
+        return []
+    rows = payload.get("value")
+    return rows if isinstance(rows, list) else []
+
+
+def _summarize_low_stock(rows: list) -> dict:
+    """Aggregate bin-level rows to per-product totals and flag which products are low on stock.
+
+    Returns the same ``{status, content:[{text}]}`` shape as _odata_call, but the text is a
+    product-total table (ascending by total) with a LOW flag applied against LOW_STOCK_THRESHOLD,
+    so the agent reports products — not individual bins — and never calls a full-stock bin the
+    whole product's supply.
+    """
+    totals: dict = defaultdict(float)
+    units: dict = {}
+    for row in rows:
+        product = row.get("Product")
+        if not product:
+            continue
+        try:
+            totals[product] += float(row.get(_QTY_FIELD) or 0)
+        except (TypeError, ValueError):
+            continue
+        units.setdefault(product, row.get(_UNIT_FIELD) or "")
+
+    lines = [
+        f"Per-product stock totals for Warehouse {WAREHOUSE_ID} "
+        f"(low-stock threshold: < {LOW_STOCK_THRESHOLD} units, "
+        f"{int(LOW_STOCK_THRESHOLD_RATIO * 100)}% of {WAREHOUSE_CAPACITY} nominal capacity).",
+        "Totals are summed across all storage bins per product.",
+        "",
+    ]
+    low = []
+    for product in sorted(totals, key=totals.get):
+        total = totals[product]
+        is_low = total < LOW_STOCK_THRESHOLD
+        flag = "LOW" if is_low else "ok"
+        lines.append(f"  {product}: {total:.0f} {units.get(product, '')} [{flag}]")
+        if is_low:
+            low.append(product)
+
+    lines.append("")
+    lines.append(
+        f"Low on stock ({len(low)}): {', '.join(low)}" if low
+        else "No products are below the low-stock threshold."
+    )
+    return {"status": "success", "content": [{"text": "\n".join(lines)}]}
+
+
 @tool
 def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict:
     """Get real-time physical stock for GlobalTech's Distribution Center (Warehouse 1750).
@@ -224,12 +309,14 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
     Args:
         product: A product code such as "WM-AN02" to query one product. Leave empty ("") to
             return all products in the warehouse.
-        low_stock_only: When True, sort results ascending by on-hand quantity so the
-            lowest-stock items come first (answers "what is low on stock?" in one call).
+        low_stock_only: When True, return a per-PRODUCT total-stock table (summed across bins)
+            with each product flagged low/ok against the reorder threshold, so "what is low on
+            stock?" is answered correctly in one call — not distorted by per-bin fragments.
 
     Returns:
-        Dict with ``status`` and ``content`` — the same shape as ``odata_caller`` — carrying the
-        matching WarehousePhysicalStockProducts rows (Product, on-hand quantity, unit, bin).
+        Dict with ``status`` and ``content`` — the same shape as ``odata_caller``. For a normal
+        query, the matching WarehousePhysicalStockProducts rows (Product, on-hand quantity, unit,
+        bin). For ``low_stock_only=True``, a per-product total-stock table with low-stock flags.
     """
     # $filter: always scope to this warehouse; add the product only when one was requested.
     # Built in code, so the model never guesses a filter and never sees a 400-driven retry.
@@ -240,14 +327,14 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
     odata_params = {
         "$filter": filter_clause,
         # The exact field names the baseline kept rediscovering via $metadata, fixed here.
-        "$select": "Product,EWMStockQuantityInBaseUnit,EWMStockQuantityBaseUnit,EWMStorageBin",
+        "$select": f"Product,{_QTY_FIELD},{_UNIT_FIELD},EWMStorageBin",
     }
-    # Low-stock questions are answered by a server-side sort, not by fetching all rows and
-    # comparing client-side, so the whole query stays one round-trip.
+    # Low-stock questions need PRODUCT totals, but the entity is bin-level. Pull the whole
+    # warehouse in one page so we can aggregate deterministically below.
     if low_stock_only:
-        odata_params["$orderby"] = "EWMStockQuantityInBaseUnit asc"
+        odata_params["$top"] = str(_STOCK_ROW_PAGE_SIZE)
 
-    return _odata_call(
+    result = _odata_call(
         base_url=WAREHOUSE_ODATA_BASE_URL,
         endpoint="WarehousePhysicalStockProducts",
         operation="get",
@@ -255,6 +342,13 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
         auth_type="api_key",
         auth_env_var="SAP_S4HANA_PUBLIC_CLOUD_KEY",
     )
+
+    # Aggregate bin rows to per-product totals and apply the reorder threshold in code, so the
+    # low-stock verdict is deterministic and correct rather than eyeballed from raw bin rows.
+    if low_stock_only and result.get("status") == "success":
+        return _summarize_low_stock(_extract_rows(result))
+
+    return result
 
 
 # Router prompt for the improved agent. It is deliberately NOT the baseline prompt plus a schema
@@ -281,9 +375,11 @@ PRODUCT KNOWLEDGE:
 - WM-AN04: Communication Devices (networking and connectivity hardware)
 
 LOW-STOCK JUDGEMENT:
-- Each product has a nominal capacity of {capacity} units. Treat an item as "low on stock" when
-  its on-hand quantity is well below that (roughly under 20%). Call get_warehouse_stock with
-  low_stock_only=True, then report which products are low with their quantities.
+- Each product has a nominal capacity of {capacity} units; an item is "low on stock" when its
+  total on-hand quantity is under {threshold} units (20% of capacity). Call get_warehouse_stock
+  with low_stock_only=True — it returns PER-PRODUCT totals (summed across all storage bins) with
+  each product already flagged low/ok. Report the flagged products with their totals; never treat
+  a single low-quantity storage bin as the whole product's stock.
 
 COMMUNICATION STYLE:
 - Be professional but conversational and succinct.
@@ -296,7 +392,7 @@ When users ask questions:
 2. Read the returned rows and answer with the specific quantities.
 3. For fulfillment questions, compare the on-hand quantity against the requested amount and give a
    clear yes/no with the numbers.
-""".format(capacity=WAREHOUSE_CAPACITY)
+""".format(capacity=WAREHOUSE_CAPACITY, threshold=LOW_STOCK_THRESHOLD)
 
 
 def _build_selector_tool(model, knowledgebase_path=KNOWLEDGEBASE_PATH):
