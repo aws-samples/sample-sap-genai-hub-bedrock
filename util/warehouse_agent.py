@@ -21,7 +21,7 @@ the eval-driven refactor. Each of the three findings is knowable at *design time
 runtime, so we move that knowledge into code:
 
 - a deep **``get_warehouse_stock``** tool encodes the service root, entity set, field
-  names, warehouse ID, and server-side ``$filter``/``$select``/``$orderby`` construction.
+  names, warehouse ID, and server-side ``$filter``/``$select`` construction.
   The agent stops writing OData for the hot path — it fills two typed parameters and gets
   the answer in **one** call, no ``$metadata``, no selector, no failed filters.
 - the selector sub-agent and generic ``odata_caller`` are **kept as a fallback**: for
@@ -164,7 +164,6 @@ COMMUNICATION STYLE:
 - Be professional but conversational and succinct
 - Explain your discovery process when exploring new data
 - Provide specific, actionable insights with quantitative data
-- If you know the user's preferences from memory, apply them without asking
 - Do not use emojis
 
 When users ask questions:
@@ -220,8 +219,9 @@ def build_warehouse_agent(model, system_prompt=WAREHOUSE_SYSTEM_PROMPT,
 # rows. Answering "what is low on stock?" therefore requires aggregating bin rows to per-product
 # totals BEFORE comparing to capacity — otherwise a product with 1,772 units across four bins
 # looks "critically low" because one of its bins holds two units. OData v4 $apply/groupby would do
-# this server-side, but this SAP sandbox entity rejects it (400), so we sum in Python. All 188
-# warehouse rows come back in one page ($top=1000), so the aggregation stays a single round-trip.
+# this server-side, but this SAP sandbox entity rejects it (400), so we sum in Python. Every query
+# lifts the page size to $top=1000 so all 188 warehouse rows come back in one page, keeping both the
+# aggregation and a full overview a single round-trip.
 _STOCK_ROW_PAGE_SIZE = 1000
 _QTY_FIELD = "EWMStockQuantityInBaseUnit"
 _UNIT_FIELD = "EWMStockQuantityBaseUnit"
@@ -328,11 +328,12 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
         "$filter": filter_clause,
         # The exact field names the baseline kept rediscovering via $metadata, fixed here.
         "$select": f"Product,{_QTY_FIELD},{_UNIT_FIELD},EWMStorageBin",
+        # Always lift the page size past the SAP default so a full-warehouse overview or low-stock
+        # aggregation sees every bin row in one page — otherwise "all products" silently truncates
+        # to the service's default page (and a per-product total could miss bins). All 188 warehouse
+        # rows fit in one page, so this stays a single round-trip.
+        "$top": str(_STOCK_ROW_PAGE_SIZE),
     }
-    # Low-stock questions need PRODUCT totals, but the entity is bin-level. Pull the whole
-    # warehouse in one page so we can aggregate deterministically below.
-    if low_stock_only:
-        odata_params["$top"] = str(_STOCK_ROW_PAGE_SIZE)
 
     result = _odata_call(
         base_url=WAREHOUSE_ODATA_BASE_URL,
@@ -384,7 +385,6 @@ LOW-STOCK JUDGEMENT:
 COMMUNICATION STYLE:
 - Be professional but conversational and succinct.
 - Provide specific, actionable insights with quantitative data from the tool results.
-- If you know the user's preferences from memory, apply them without asking.
 - Do not use emojis.
 
 When users ask questions:

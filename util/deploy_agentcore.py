@@ -1,6 +1,6 @@
 """Deploy the improved warehouse agent to AgentCore Runtime for Lab 09 Stage 2.
 
-Stage 2 verifies the Stage-1 prompt fix in production, which first requires shipping that
+Stage 2 verifies the Stage-1 fix in production, which first requires shipping that
 fix to the Lab 7 runtime. That redeploy is pure AgentCore plumbing (write the entrypoint
 and requirements, configure the Runtime, patch the generated Dockerfile, launch, wait for
 READY) and not the focus of an evaluation lab, so it lives here instead of the notebook.

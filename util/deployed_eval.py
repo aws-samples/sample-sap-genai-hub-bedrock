@@ -16,8 +16,11 @@ def _metric_value(results, evaluator_id):
 
 
 def render_overview(sessions, graded, columns):
-    """Full Stage-2 outcome table: one row per scenario, one column per evaluator,
-    plus prod-only latency, closing with a mean row.
+    """Full Stage-2 outcome table as a **Markdown** string: one row per scenario, one column
+    per evaluator, plus prod-only latency, closing with a mean row.
+
+    Returns GitHub-flavored Markdown so the notebook can `display(Markdown(...))` it as a rich
+    HTML table (matching Lab 7's rendered output) rather than fixed-width monospace text.
 
     Unlike the old single-column scorecard (which averaged away everything but a
     handful of headline metrics), this surfaces *every* evaluator grade_sessions
@@ -32,23 +35,19 @@ def render_overview(sessions, graded, columns):
     None values render as '-'; a cold-start latency is flagged with '*'.
     """
     metric_headers = [h for h, _ in columns]
-    all_headers = metric_headers + ["Latency"]
-    name_w = max([len("Scenario")] + [len(s["scenario_name"]) for s in sessions])
-    col_w = [max(len(h), 7) for h in all_headers]
-    total_w = name_w + sum(w + 1 for w in col_w)
+    all_headers = ["Scenario"] + metric_headers + ["Latency"]
 
-    def row(name, values):
-        cells = [f"{name:<{name_w}}"] + [f"{v:>{w + 1}}" for v, w in zip(values, col_w)]
-        return "".join(cells)
+    def row(cells):
+        return "| " + " | ".join(str(c) for c in cells) + " |"
 
-    lines = [row("Scenario", all_headers), "-" * total_w]
+    lines = [row(all_headers), row(["---"] * len(all_headers))]
 
     metric_vals = {h: [] for h in metric_headers}
     latencies = []
     any_cold = False
     for s in sessions:
         results = graded.get(s["scenario_name"], [])
-        cells = []
+        cells = [s["scenario_name"]]
         for h, eid in columns:
             v = _metric_value(results, eid)
             if v is not None:
@@ -60,15 +59,15 @@ def render_overview(sessions, graded, columns):
         cold = s.get("cold_start")
         any_cold = any_cold or bool(cold)
         cells.append(_fmt_latency(lat, cold))
-        lines.append(row(s["scenario_name"], cells))
+        lines.append(row(cells))
 
-    lines.append("-" * total_w)
-    mean_cells = [_fmt(mean(metric_vals[h]) if metric_vals[h] else None) for h in metric_headers]
+    mean_cells = ["**mean**"]
+    mean_cells += [_fmt(mean(metric_vals[h]) if metric_vals[h] else None) for h in metric_headers]
     mean_cells.append(_fmt_latency(mean(latencies) if latencies else None, False))
-    lines.append(row("mean", mean_cells))
+    lines.append(row(mean_cells))
 
     if any_cold:
-        lines.append("* cold start")
+        lines.append("\n\\* cold start")
     return "\n".join(lines)
 
 
