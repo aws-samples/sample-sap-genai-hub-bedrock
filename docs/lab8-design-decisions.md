@@ -1,4 +1,4 @@
-# Lab 08 — AgentCore Memory & Evaluation: Design Decisions
+# Labs 08 & 09 — AgentCore Memory (08) & Evaluation (09): Design Decisions
 
 ## Goal
 
