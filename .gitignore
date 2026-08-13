@@ -42,11 +42,8 @@ aicore-config.json
 # Evaluation output
 evaluation_report.json
 
-# Evaluation future-work notes (working scratchpad, not for publication)
-docs/eval-future-work.md
-
-# Design / brainstorming specs (working docs, not for publication)
-docs/superpowers/
+# Design docs, specs, and brainstorming notes (working scratchpads, not for publication)
+docs/
 
 # Claude Code
 CLAUDE.md
