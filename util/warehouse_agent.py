@@ -249,13 +249,13 @@ def _extract_rows(odata_result: dict) -> list:
     return rows if isinstance(rows, list) else []
 
 
-def _summarize_low_stock(rows: list) -> dict:
-    """Aggregate bin-level rows to per-product totals and flag which products are low on stock.
+def _aggregate_by_product(rows: list) -> tuple:
+    """Sum bin-level rows into per-product on-hand totals. Shared by both summarizers.
 
-    Returns the same ``{status, content:[{text}]}`` shape as _odata_call, but the text is a
-    product-total table (ascending by total) with a LOW flag applied against LOW_STOCK_THRESHOLD,
-    so the agent reports products — not individual bins — and never calls a full-stock bin the
-    whole product's supply.
+    Returns ``(totals, units)`` where ``totals[product]`` is the quantity summed across all of
+    that product's storage bins and ``units[product]`` is its base unit. Doing this in Python is
+    the whole point of the deep tool: totals are correct by construction, not summed by the model
+    from ~188 raw bin rows.
     """
     totals: dict = defaultdict(float)
     units: dict = {}
@@ -268,6 +268,37 @@ def _summarize_low_stock(rows: list) -> dict:
         except (TypeError, ValueError):
             continue
         units.setdefault(product, row.get(_UNIT_FIELD) or "")
+    return totals, units
+
+
+def _summarize_totals(rows: list) -> dict:
+    """Aggregate bin-level rows to a per-product on-hand total table (no low-stock flags).
+
+    The overview counterpart to _summarize_low_stock: same deterministic Python aggregation,
+    minus the reorder threshold. Returns the _odata_call ``{status, content:[{text}]}`` shape so
+    a full-inventory answer reports correct per-product totals instead of leaving the model to add
+    up the raw bin rows itself.
+    """
+    totals, units = _aggregate_by_product(rows)
+    lines = [
+        f"Per-product on-hand stock totals for Warehouse {WAREHOUSE_ID} "
+        f"(summed across all storage bins).",
+        "",
+    ]
+    for product in sorted(totals, key=totals.get, reverse=True):
+        lines.append(f"  {product}: {totals[product]:.0f} {units.get(product, '')}")
+    return {"status": "success", "content": [{"text": "\n".join(lines)}]}
+
+
+def _summarize_low_stock(rows: list) -> dict:
+    """Aggregate bin-level rows to per-product totals and flag which products are low on stock.
+
+    Returns the same ``{status, content:[{text}]}`` shape as _odata_call, but the text is a
+    product-total table (ascending by total) with a LOW flag applied against LOW_STOCK_THRESHOLD,
+    so the agent reports products — not individual bins — and never calls a full-stock bin the
+    whole product's supply.
+    """
+    totals, units = _aggregate_by_product(rows)
 
     lines = [
         f"Per-product stock totals for Warehouse {WAREHOUSE_ID} "
@@ -314,9 +345,10 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
             stock?" is answered correctly in one call — not distorted by per-bin fragments.
 
     Returns:
-        Dict with ``status`` and ``content`` — the same shape as ``odata_caller``. For a normal
-        query, the matching WarehousePhysicalStockProducts rows (Product, on-hand quantity, unit,
-        bin). For ``low_stock_only=True``, a per-product total-stock table with low-stock flags.
+        Dict with ``status`` and ``content`` — the same shape as ``odata_caller``. For a
+        full-warehouse overview (no ``product``), a per-product on-hand total table summed in code.
+        For ``low_stock_only=True``, the same per-product totals with low-stock flags. For a
+        single ``product``, its matching WarehousePhysicalStockProducts bin rows.
     """
     # $filter: always scope to this warehouse; add the product only when one was requested.
     # Built in code, so the model never guesses a filter and never sees a 400-driven retry.
@@ -344,10 +376,26 @@ def get_warehouse_stock(product: str = "", low_stock_only: bool = False) -> dict
         auth_env_var="SAP_S4HANA_PUBLIC_CLOUD_KEY",
     )
 
-    # Aggregate bin rows to per-product totals and apply the reorder threshold in code, so the
-    # low-stock verdict is deterministic and correct rather than eyeballed from raw bin rows.
+    rows = _extract_rows(result)
+
+    # A successful call that yields no readable rows means we couldn't parse the SAP response,
+    # not that the warehouse is empty. Say so, rather than letting the aggregators report a false
+    # "nothing is low on stock" / empty overview with status success. (Non-success results skip
+    # this and fall through to `return result` below, so the underlying error still surfaces.)
+    if result.get("status") == "success" and not rows:
+        return {"status": "error", "content": [{"text": (
+            "Warehouse stock query returned no readable rows — the SAP response could not be "
+            "parsed. Treat this as a data-access failure, not an empty warehouse."
+        )}]}
+
+    # Aggregate bin rows to per-product totals in code so every quantity the agent reports is
+    # deterministic and correct by construction, not eyeballed by the model from ~188 raw bin
+    # rows. low_stock_only adds the reorder-threshold flags; a product-less overview gets the same
+    # aggregation without them. A single-product query returns its raw bins (only a handful).
     if low_stock_only and result.get("status") == "success":
-        return _summarize_low_stock(_extract_rows(result))
+        return _summarize_low_stock(rows)
+    if not product and result.get("status") == "success":
+        return _summarize_totals(rows)
 
     return result
 
