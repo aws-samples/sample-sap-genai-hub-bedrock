@@ -7,27 +7,15 @@ requires-python = ">=3.12.9"
 dependencies = [
     "boto3>=1.37.0",
     "ddgs>=8.0.4",
-    # 6.x: newer aiobotocore (>=3.2) lifts the botocore<1.40.62 ceiling that
-    # 5.x imposed, letting bedrock-agentcore reach a version with EvaluationClient
-    # (Lab 9). 6.x pulls langchain~=1.2, so the LangChain/LangGraph agents in
-    # Labs 3 and 5 were migrated off the 0.3.x API (e.g. create_react_agent's
-    # `state_modifier` -> `prompt`).
     "sap-ai-sdk-gen[all]>=6.10.0",
     "ipykernel>=6.29.5",
-    # ==1.14.0: strands-agents-evals LLM-judge evaluators (TrajectoryEvaluator,
-    # ToolSelectionAccuracyEvaluator) call agent(prompt, structured_output_model=...)
-    # and read result.structured_output, an API added in strands-agents 1.14.0.
     "strands-agents==1.14.0",
     "strands-agents-builder==0.1.8",
     "strands-agents-tools==0.2.0",
     "streamlit>=1.46.1",
     "uvicorn>=0.34.3",
     "tavily-python",
-    # >=1.6.0: introduces bedrock_agentcore.evaluation.EvaluationClient /
-    # ReferenceInputs used by Lab 9's deployed-eval stage.
     "bedrock-agentcore>=1.6.0",
-    "bedrock-agentcore-starter-toolkit==0.1.14",
-    # ==0.2.0: 0.2.1 imports strands.plugins, which does not exist in any
-    # strands-agents release (checked through 1.19.0), so it fails at import.
+    "bedrock-agentcore-starter-toolkit==0.1.28",
     "strands-agents-evals==0.2.0",
 ]
