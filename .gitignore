@@ -39,12 +39,5 @@ aicore-config.json
 *-config.json
 .aicore/
 
-# Evaluation output
-evaluation_report.json
-
-# Design docs, specs, and brainstorming notes (working scratchpads, not for publication)
-docs/
-
-# Claude Code
-CLAUDE.md
-.claude/
+# Joule integration values (contains Cognito client secret) - written by Lab 8 Step 12
+joule_integration_config.json
